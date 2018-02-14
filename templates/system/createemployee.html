@@ -1,0 +1,11 @@
+
+  <br><br><br><br><br> 
+<center>
+<h1> Create Employee </h1><br><br>
+ 
+<form action="{% url 'createemployee'  %}"method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<input type="submit" value="Create Employee" />
+</form>
+</center>

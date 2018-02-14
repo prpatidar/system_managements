@@ -1,0 +1,23 @@
+
+<a href="{% url 'account_logout' %}">logout</a>
+<center>
+<h1>   
+ <br> <br><a href="{% url 'createemployee' %}"> Create Employee </a>
+
+</h1>
+<table border="1" width="80%">
+<tr>
+<th>Username </th>
+<th>EmailID</th>
+<th>Role</th>
+</tr>
+{% for user in users  %}
+  <tr>     
+  <td>{{user.username}}</td>
+  <td>{{user.email}}</td>
+  <td>{{user.role}}</td>
+  </tr>
+{% endfor %}
+</table>
+</center>
+
