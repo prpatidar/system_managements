@@ -84,6 +84,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         
    
 
+class Project(models.Model):
+    title = models.CharField(max_length=30)
+    discription = models.TextField(max_length=100)
+    status = models.CharField(max_length=30,default="Pending",blank=True)
+    startdate = models.DateTimeField(blank=True)
+    enddate = models.DateTimeField(blank=True) #auto_now_add=False,
+
+class Task(models.Model):
+    project_id = models.ForeignKey(Project, blank=True)
+    title = models.CharField(max_length=30)
+    discription = models.TextField(max_length=100)
+    startdate = models.DateTimeField(blank=True)
+    enddate = models.DateTimeField(blank=True)
+    employee_id = models.EmailField(max_length=30)
 
 
 

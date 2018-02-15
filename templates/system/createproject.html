@@ -1,0 +1,12 @@
+
+
+  <br>
+<center>
+<h1> Create Project </h1><br>
+ 
+<form action="{% url 'createproject'  %}"method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+<input type="submit" value="Create Project" />
+</form>
+</center>

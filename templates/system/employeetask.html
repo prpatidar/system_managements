@@ -1,0 +1,29 @@
+<a href="{% url 'account_logout' %}">logout</a>
+<center>
+<h1>   
+  Your Tasks
+
+</h1>
+<table border="1" width="80%">
+<tr>
+<th>Projet ID </th>
+<th>Title </th>
+<th>Description</th>
+<th>Start Date</th>
+<th>End Date</th>
+<th>Employee ID</th>
+</tr>
+{% for task in tasks  %}
+  
+  <tr>
+  <td>{{task.project_id_id}}</td>
+  <td>{{task.title}}</td>
+  <td>{{task.description}}</td>
+  <td>{{task.startdate}}</td>
+  <td>{{task.enddate}}</td>
+  <td>{{task.employee_id}}</td>
+  </tr>
+  
+{% endfor %}
+</table>
+</center>

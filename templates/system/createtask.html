@@ -1,0 +1,17 @@
+
+  <br><br><br><br><br> 
+<center>
+<h1> Create Task </h1><br><br>
+ {{projectid}}
+<form action="{% url 'createtask' projectid=projectid  %}"method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <select name="employeeid"> 
+    	{% for employee in employees %}
+            <option>{{employee.email}}</option>
+    	{% endfor %}
+ 
+    </select>
+<input type="submit" value="Create Task" />
+</form>
+</center>
