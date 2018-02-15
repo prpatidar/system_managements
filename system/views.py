@@ -74,6 +74,7 @@ class CreateTaskPageView(View):
           print projectid
           task=form.save(commit=False)
           task.project_id_id=projectid
+          task.employee_id=request.POST.get('employeeid')
           task.save()
           return redirect('/system/project')
         else :

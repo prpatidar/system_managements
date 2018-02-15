@@ -14,9 +14,6 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
-        """
-        Creates and saves a User with the given email and password.
-        """
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
@@ -38,7 +35,6 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     username =models.CharField(('username'),max_length=30)
     email = models.EmailField( ('email address'), unique=True)
@@ -48,7 +44,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(('active'), default=True)
     role= models.CharField( ('role'),max_length=30,default='manager')
     
-
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -59,48 +54,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = ('users')
 
     def get_full_name(self):
-        '''
-        Returns the first_name plus the last_name, with a space in between.
-        '''
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
-        '''
-        Returns the short name for the user.
-        '''
         return self.first_name
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        '''
-        Sends an email to this User.
-        '''
         send_mail(subject, message, from_email, [self.email], **kwargs)
-    
-   
     
     def is_staff(self):
          return False
         
-   
-
 class Project(models.Model):
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
     status = models.CharField(max_length=30,default="Pending",blank=True)
-    startdate = models.DateTimeField(blank=True)
-    enddate = models.DateTimeField(blank=True) #auto_now_add=False,
+    startdate = models.DateTimeField(null=True,blank=True)
+    enddate = models.DateTimeField(null=True,blank=True) #auto_now_add=False,
 
 class Task(models.Model):
     project_id = models.ForeignKey(Project, blank=True)
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
-    startdate = models.DateTimeField(blank=True)
-    enddate = models.DateTimeField(blank=True)
+    startdate = models.DateTimeField(null=True,blank=True)
+    enddate = models.DateTimeField(null=True,blank=True)
     employee_id = models.EmailField(max_length=30)
-
-
-
-
-
-
