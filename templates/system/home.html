@@ -5,17 +5,19 @@
 	<br><br><br><br><br>
 <h1>
   Hi {{ user.username }}!
-  {{user.role}}
+  <br>
+   Role:  {{user.role}}  ID :{{user.id}}
+  
  
   {% if user.role == "manager" %}
- <br> <br><a href="{% url 'project' %}">Create Project </a>
+ <br> <br><a href="{% url 'project' managerid=user.id %}">Create Project </a>
   
 <br>
-  <a href="{% url 'employee' %}">Employees</a>
+  <a href="{% url 'employee' managerid=user.id %}">Employees</a>
   {% endif %}
 
   {% if user.role == "employee" %}
- <br> <br><a href="{% url 'employeetask' %}"> Assigned Tasks </a>
+ <br> <br><a href="{% url 'employeeprojects' employeeid=user.id %}"> Assigned projects </a>
   {% endif %}
 <br>
   <a href="{% url 'account_logout' %}">logout</a>

@@ -1,8 +1,8 @@
 
-<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'account_logout' %}">logout</a><a href="{% url 'home' %}">Home </a>
 <center>
 <h1>   
- <br> <br><a href="{% url 'createproject' %}"> Create project </a>
+ <br> <br><a href="{% url 'createproject' managerid=managerid%}"> Create project </a>
 
 
 </h1>
@@ -14,17 +14,17 @@
 <th>Status</th>
 <th>Start Date</th>
 <th>End Date</th>
-</tr>"+
+</tr>
 {% for project in projects  %}
   
   <tr>  
   <td>{{project.id}}</td>   
-   <td><a href="{% url 'task' projectid=project.id %}" > {{project.title}} </a> </td> 
+   <td><a href="{% url 'task' projectid=project.id managerid=managerid%}" > {{project.title}} </a> </td> 
   <td>{{project.discription}}</td>
   <td>{{project.status}}</td>
   <td>{{project.startdate}}</td>
   <td>{{project.enddate}}</td>
- 
+  <td ><a href="{% url 'deleteproject' projectid=project.id managerid=managerid%}">Delete Project</a>
   </tr>
   
 {% endfor %}

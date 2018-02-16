@@ -1,0 +1,21 @@
+<a href="{% url 'home' %}">Home </a>
+<center>
+   <br><br><br><br>
+	<h1> Update Task </h1>
+	<h2>Task ID: {{taskid}}</h2>
+   <br><br>
+
+<form action="{% url 'updatetask' taskid=taskid %}" method="post">
+	{% csrf_token %}
+	 <select name="status">
+	 	<option>In Progress</option>
+	 	<option>Completed</option>
+	 	<option>Testing</option>
+	 	<option>Tested</option>
+	 	<option>Delivered</option>
+	 </select><br><br>
+	 Estimated Time<input type="text" name="estimatetime"><br><br><br>
+	 Spend Time<input type="text" name="spendtime"><br><br>
+	 <input type="submit" name="Update"><br>
+</form>	 
+</center>

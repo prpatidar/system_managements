@@ -37,12 +37,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username =models.CharField(('username'),max_length=30)
-    email = models.EmailField( ('email address'), unique=True)
-    first_name = models.CharField(('first name'), max_length=30, blank=True)
-    last_name = models.CharField(('last name'), max_length=30, blank=True)
-    date_joined = models.DateTimeField(('date joined'), auto_now_add=True)
-    is_active = models.BooleanField(('active'), default=True)
+    email = models.EmailField( ('email'), unique=True)
+    first_name = models.CharField(('first_name'), max_length=30, blank=True)
+    last_name = models.CharField(('last_name'), max_length=30, blank=True)
+    date_joined = models.DateTimeField(('date_joined'), auto_now_add=True)
+    is_active = models.BooleanField(('is_active'), default=True)
     role= models.CharField( ('role'),max_length=30,default='manager')
+    createdby = models.CharField(max_length=2,default=0)
     
     objects = UserManager()
 
@@ -70,13 +71,17 @@ class Project(models.Model):
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
     status = models.CharField(max_length=30,default="Pending",blank=True)
-    startdate = models.DateTimeField(null=True,blank=True)
-    enddate = models.DateTimeField(null=True,blank=True) #auto_now_add=False,
+    startdate = models.DateField(null=True,blank=True)
+    enddate = models.DateField(null=True,blank=True) #auto_now_add=False,
+    createdby = models.CharField(max_length=2)
 
 class Task(models.Model):
-    project_id = models.ForeignKey(Project, blank=True)
+    project= models.ForeignKey(Project, blank=True)
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
-    startdate = models.DateTimeField(null=True,blank=True)
-    enddate = models.DateTimeField(null=True,blank=True)
-    employee_id = models.EmailField(max_length=30)
+    startdate = models.DateField(null=True,blank=True)
+    enddate = models.DateField(null=True,blank=True)
+    employee = models.ForeignKey(User,blank=True)
+    status = models.CharField(max_length=30,default="Pending",blank=True)
+    estimatetime =models.TimeField(null=True,blank=True)
+    spendtime = models.TimeField(null=True ,blank=True)

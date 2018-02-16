@@ -1,9 +1,8 @@
-<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'account_logout' %}">logout</a><a href="{% url 'home' %}">Home </a>
 <center>
 <h1>   
- <br> <br><a href="{% url 'createtask' projectid=projectid %}"> Create Task</a>
-
-{{projectid}}
+ <br> <br><a href="{% url 'createtask' projectid=projectid managerid=managerid %}"> Create Task</a>
+ <br>For Project ID : {{projectid}}
 </h1>
 <table border="1" width="80%">
 <tr>

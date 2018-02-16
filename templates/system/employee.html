@@ -1,27 +1,33 @@
 
 <a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
 <center>
 <h1>   
- <br> <br><a href="{% url 'createemployee' %}"> Create Employee </a>
+ <br> <br><a href="{% url 'createemployee' managerid=managerid%}"> Create Employee </a>
 
 
 </h1>
 <table border="1" width="80%">
 <tr>
 	<th>User ID </th>
-    <th>Username </th>
-    <th>EmailID</th>
-    <th>Role</th>
+  <th>Manager ID</th>
+  <th> Full Name</th>
+  <th>Username </th>
+  <th>EmailID</th>
+  <th>Role</th>
 </tr>
 {% for user in users  %}
-  {% if user.role == "employee" %}
-  <tr>   
+    <tr>   
       <td>{{user.id}}</td>  
+      <td>{{user.createdby}}</td>
+      <td>{{user.get_full_name}}
       <td>{{user.username}}</td>
       <td>{{user.email}}</td>
       <td>{{user.role}}</td>
+
+      <td ><a href="{% url 'updateprofile' employeeid=user.id %}">Update Profile</a></td>
+      <td ><a href="{% url 'deleteprofile' employeeid=user.id  managerid=managerid %}">DeleteProfile</a></td>
   </tr>
-  {% endif %}
 {% endfor %}
 </table>
 </center>

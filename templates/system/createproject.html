@@ -1,10 +1,10 @@
-
+<a href="{% url 'home' %}">Home </a>
 
   <br>
 <center>
 <h1> Create Project </h1><br>
  
-<form action="{% url 'createproject'  %}"method="post">
+<form action="{% url 'createproject' managerid=managerid  %}"method="post">
     {% csrf_token %}
     {{ form.as_p }}
 <input type="submit" value="Create Project" />

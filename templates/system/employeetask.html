@@ -1,4 +1,5 @@
 <a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
 <center>
 <h1>   
   Your Tasks
@@ -11,17 +12,22 @@
 <th>Description</th>
 <th>Start Date</th>
 <th>End Date</th>
-<th>Employee ID</th>
+<th>Status</th>
+<th>Estimate Time</th>
+<th>spend Time</th>
 </tr>
 {% for task in tasks  %}
   
   <tr>
-  <td>{{task.project_id_id}}</td>
+  <td>{{task.project_id}}</td>
   <td>{{task.title}}</td>
-  <td>{{task.description}}</td>
+  <td>{{task.discription}}</td>
   <td>{{task.startdate}}</td>
   <td>{{task.enddate}}</td>
-  <td>{{task.employee_id}}</td>
+  <td>{{task.status}}</td>
+  <td>{{task.estimatetime}}</td>
+  <td>{{task.spendtime}}</td>
+  <td> <a href="{% url 'updatetask' taskid=task.id %}">Update Task</a></td>
   </tr>
   
 {% endfor %}
