@@ -1,0 +1,20 @@
+<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
+
+<center>
+<br><br>
+<h2> Fill The Working Hours for day :{{day}}</h2>
+<br><br>
+<form action="{% url 'timesheetform' employeeid=employeeid day=day %}" method="post">
+{% csrf_token %}
+<select name="taskname">
+	{% for task in tasklist %}
+	 <option>{{task}}</option>
+	{% endfor %}
+</select>
+<input type ="text" name="spendtime" />
+<br><br>
+<input type="submit" name="Submit" />
+
+</form>
+</center>

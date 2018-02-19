@@ -3,13 +3,15 @@ from django.views.generic import View
 from django.conf import settings
 from django.template import loader
 from django.contrib.auth import get_user_model
-from .forms import EmployeeForm , ProjectForm ,TaskForm
-from .models import Project, Task ,User
+from .forms import EmployeeForm , ProjectForm ,TaskForm,TimeSheetForm
+from .models import Project, Task ,User ,TimeSheet
 from django import forms
+import calendar,datetime
 from collections import OrderedDict
 
 class HomePageView(View) :
    def get(self, request):
+
        return render(request,'system/home.html',{})
 
 class EmployeePageView(View) :
@@ -37,6 +39,48 @@ class ProjectPageView(View) :
    def get(self, request,managerid):
        projects = Project.objects.filter(createdby=managerid)
        return render(request,'system/project.html',{"projects":projects,'managerid':managerid})
+
+class TimeSheetPageView(View):
+   def get(self, request,employeeid):
+       c=calendar.TextCalendar(calendar.MONDAY)
+       date=datetime.datetime.now()
+       days = []
+       for i in c.itermonthdays(date.year,date.month):
+           days.append(i)
+       print employeeid
+       timesheets=TimeSheet.objects.filter(month=date.month,employee_id=employeeid)
+       print timesheets
+       return render(request,'system/timesheet.html',{'timesheets':timesheets,'days' : days,'month':datetime.datetime.now().strftime('%B') , 'year' : date.year,'employeeid': employeeid } )
+
+class TimeSheetFormPageView(View):
+   def get(self, request,employeeid,day):
+       tasks=Task.objects.filter(employee_id=employeeid)
+       tasklist=[]
+       for task in tasks :
+           tasklist.append(task.title)
+       return render(request,'system/timesheetform.html',{'employeeid': employeeid, 'day' : day,'tasklist' : tasklist })
+   def post(self,request,employeeid,day):
+       
+       c=calendar.TextCalendar(calendar.MONDAY)
+       date=datetime.datetime.now()
+       timesheet=TimeSheet.objects.get(month=date.month,day=day,employee_id=employeeid)
+       if timesheet :
+         timesheet.taskname=request.POST.get('taskname')
+         timesheet.spendtime=request.POST.get('spendtime')
+         timesheet.save()
+       else :
+         form=TimeSheetForm()
+         f=form.save(commit=False)
+         f.day=day
+         f.employee_id=employeeid
+         f.month=date.month
+         f.year=date.year
+         f.spendtime=request.POST.get('spendtime')
+         f.taskname =request.POST.get('taskname')
+         f.save()
+       print TimeSheet.objects.all()
+       return redirect('/system/timesheet/'+employeeid+'/')
+
 
 
 class DeleteProfilePageView(View):

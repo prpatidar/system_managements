@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^updateprofile/(?P<employeeid>\d+)/$',views.UpdateProfilePageView.as_view(),name='updateprofile'),
     url(r'^deleteprofile/(?P<employeeid>\d+)/(?P<managerid>\d+)/$',views.DeleteProfilePageView.as_view(),name='deleteprofile'),
     url(r'^deleteproject/(?P<projectid>\d+)/(?P<managerid>\d+)/$',views.DeleteProjectPageView.as_view(),name='deleteproject'),
- 
+    url(r'^timesheetform/(?P<employeeid>\d+)/(?P<day>\d+)/$',views.TimeSheetFormPageView.as_view(),name='timesheetform'),
+    url(r'^timesheet/(?P<employeeid>\d+)/$',views.TimeSheetPageView.as_view(),name='timesheet'),
 ]

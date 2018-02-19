@@ -1,0 +1,35 @@
+<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
+
+<center>
+	<br>
+<h1>Time Sheet for Employee ID {{employeeid}}</h1>
+<font color="green" ><b> {{month}} , {{year}} </b> </font>
+<br><br>
+<table width="80%">
+<tr>
+<th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
+</tr>
+{% for i in  days %}
+    {% if forloop.counter == 0 or forloop.counter == 8 %}
+     <tr>
+    {% endif %}
+         <td height="80px" >
+             {% if i != 0  %} 
+               <a href="{% url 'timesheetform' employeeid=employeeid day=i %}"> <b><font color="black" >{{i}}</font></b>  </a>
+               <br>
+               {% for timesheet in timesheets %}
+                  {% if timesheet.day == i %}
+                   <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
+                   <font color="blue" >S.Time: </font>{{timesheet.spendtime}}<br>
+                  {% endif %}
+                {% endfor %}  
+             {% endif %}
+         </td>
+    {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 %}
+     </tr>
+    {% endif %}
+ {% endfor %}
+
+</table>
+</center>
