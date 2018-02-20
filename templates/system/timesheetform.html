@@ -5,7 +5,7 @@
 <br><br>
 <h2> Fill The Working Hours for day :{{day}}</h2>
 <br><br>
-<form action="{% url 'timesheetform' employeeid=employeeid day=day %}" method="post">
+<form action="{% url 'timesheetform' employeeid=employeeid projectid=projectid day=day month=month year=year %}" method="post">
 {% csrf_token %}
 <select name="taskname">
 	{% for task in tasklist %}

@@ -7,8 +7,8 @@
 
 
 </h1>
-<table border="1" width="80%">
-<tr>
+<table width="80%">
+<tr bgcolor="#ffff80">
 	<th>User ID </th>
   <th>Manager ID</th>
   <th> Full Name</th>
@@ -17,7 +17,7 @@
   <th>Role</th>
 </tr>
 {% for user in users  %}
-    <tr>   
+    <tr bgcolor="#ffcccc">   
       <td>{{user.id}}</td>  
       <td>{{user.createdby}}</td>
       <td>{{user.get_full_name}}

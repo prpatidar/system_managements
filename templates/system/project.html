@@ -6,8 +6,8 @@
 
 
 </h1>
-<table border="1" width="80%">
-<tr>
+<table  width="80%">
+<tr bgcolor="#ffff80">
 <th>Project ID </th>
 <th>Title </th>
 <th>Description</th>
@@ -17,7 +17,7 @@
 </tr>
 {% for project in projects  %}
   
-  <tr>  
+  <tr bgcolor="#ffcccc">   
   <td>{{project.id}}</td>   
    <td><a href="{% url 'task' projectid=project.id managerid=managerid%}" > {{project.title}} </a> </td> 
   <td>{{project.discription}}</td>

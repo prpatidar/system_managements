@@ -83,13 +83,14 @@ class Task(models.Model):
     enddate = models.DateField(null=True,blank=True)
     employee = models.ForeignKey(User,blank=True)
     status = models.CharField(max_length=30,default="Pending",blank=True)
-    estimatetime =models.TimeField(null=True,blank=True)
-    spendtime = models.TimeField(null=True ,blank=True)
+    estimatetime =models.CharField(max_length=10,null=True,blank=True)
+    spendtime = models.CharField(max_length=10,null=True ,blank=True)
 
 class TimeSheet(models.Model):
+    project_id = models.IntegerField()
     taskname = models.CharField(max_length=30)
     day = models.IntegerField()
     month = models.IntegerField()
     year = models.IntegerField()
     employee_id= models.IntegerField()
-    spendtime = models.TimeField(null=True,blank=True)
+    spendtime = models.CharField(max_length=10,null=True,blank=True)

@@ -8,6 +8,7 @@ from .models import Project, Task ,User ,TimeSheet
 from django import forms
 import calendar,datetime
 from collections import OrderedDict
+from django.core.exceptions import ObjectDoesNotExist
 
 class HomePageView(View) :
    def get(self, request):
@@ -22,7 +23,7 @@ class EmployeePageView(View) :
 
 class EmployeeTaskPageView(View) :
    def get(self, request,projectid,employeeid):
-       tasks = Task.objects.filter(project_id=projectid  , employee_id=employeeid)
+       tasks = Task.objects.filter(project_id=projectid,employee_id=employeeid)
        return render(request,'system/employeetask.html',{"tasks":tasks})
 
 class EmployeeProjectPageView(View):
@@ -33,7 +34,10 @@ class EmployeeProjectPageView(View):
             projectlist.append(task.project_id)
        projectlist=list(OrderedDict.fromkeys(projectlist))
        projects=Project.objects.filter(pk__in=projectlist) 
-       return render(request,'system/employeeprojects.html',{"projects":projects,"employeeid":employeeid})
+       date=datetime.datetime.now()
+       month=date.month
+       year=date.year
+       return render(request,'system/employeeprojects.html',{"projects":projects,"employeeid":employeeid,'month':month,'year':year})
 
 class ProjectPageView(View) :
    def get(self, request,managerid):
@@ -41,29 +45,69 @@ class ProjectPageView(View) :
        return render(request,'system/project.html',{"projects":projects,'managerid':managerid})
 
 class TimeSheetPageView(View):
-   def get(self, request,employeeid):
+   def get(self, request,employeeid,projectid,month,year):
        c=calendar.TextCalendar(calendar.MONDAY)
-       date=datetime.datetime.now()
        days = []
-       for i in c.itermonthdays(date.year,date.month):
-           days.append(i)
-       print employeeid
-       timesheets=TimeSheet.objects.filter(month=date.month,employee_id=employeeid)
-       print timesheets
-       return render(request,'system/timesheet.html',{'timesheets':timesheets,'days' : days,'month':datetime.datetime.now().strftime('%B') , 'year' : date.year,'employeeid': employeeid } )
+       month=int(month)
+       year = int(year)
+       totaldays = 0
+       for i in c.itermonthdays(year,month):
+          days.append(i)
+          totaldays += 1 
+       project = Project.objects.get(id=projectid)
+       timesheets=TimeSheet.objects.filter(project_id=projectid,month=month,employee_id=employeeid,year=year)
+       previousmonth = month-1
+       if month == 1 :
+         previousmonth = 12
+       nextmonth = month + 1 
+       if month ==12 :
+         nextmonth = 1
+       previousyear = year-1
+       nextyear = year + 1
+       date = datetime.datetime.now().date()
+       
+       daylist = []
+       today = 2 #date.day
+       if year == date.year and month == date.month :
+          i=today
+          while i > today-7 and i > 0  :
+             daylist.append(i)
+             i = i-1   
+       if today < 7 and month == date.month-1 and year==date.year :
+          while today < 7 :
+             daylist.append(days[totaldays-5])
+             totaldays -= 1
+             today += 1
+       #TimeSheet.objects.all().delete()
+       print days
+       print daylist
+       return render(request,'system/timesheet.html',
+            {'timesheets':timesheets,'days' : days,'month':month,'monthname':calendar.month_name[month] ,
+             'year' : year,'employeeid': employeeid ,'project' : project ,'previousmonth' : previousmonth,
+             'nextmonth' : nextmonth,'previousyear':previousyear ,'nextyear': nextyear ,'daylist': daylist,
+             'currentmonth':date.month,'today':date.day ,'currentyear' : date.year } )
 
 class TimeSheetFormPageView(View):
-   def get(self, request,employeeid,day):
-       tasks=Task.objects.filter(employee_id=employeeid)
+   def get(self, request,employeeid,projectid,day,month,year):
+       date = datetime.datetime.now().date()
+       tasks=Task.objects.filter(employee_id=employeeid,project_id=projectid)
        tasklist=[]
        for task in tasks :
-           tasklist.append(task.title)
-       return render(request,'system/timesheetform.html',{'employeeid': employeeid, 'day' : day,'tasklist' : tasklist })
-   def post(self,request,employeeid,day):
-       
+           if task.enddate :
+              if task.startdate <= date and task.enddate >= date :
+                 tasklist.append(task.title)
+           elif task.startdate <= date :
+              tasklist.append(task.title)
+       return render(request,'system/timesheetform.html',
+            {'employeeid': employeeid, 'day' : day,'tasklist' : tasklist,'projectid': projectid  
+            , 'month': month ,'year': year})
+   def post(self,request,employeeid,projectid,day,month,year):
        c=calendar.TextCalendar(calendar.MONDAY)
        date=datetime.datetime.now()
-       timesheet=TimeSheet.objects.get(month=date.month,day=day,employee_id=employeeid)
+       try :
+         timesheet=TimeSheet.objects.get(month=month,day=day,employee_id=employeeid,project_id=projectid,year=year)
+       except ObjectDoesNotExist :
+         timesheet = None 
        if timesheet :
          timesheet.taskname=request.POST.get('taskname')
          timesheet.spendtime=request.POST.get('spendtime')
@@ -72,14 +116,16 @@ class TimeSheetFormPageView(View):
          form=TimeSheetForm()
          f=form.save(commit=False)
          f.day=day
+         f.project_id=projectid
          f.employee_id=employeeid
-         f.month=date.month
-         f.year=date.year
+         f.month=month
+         f.year=year
          f.spendtime=request.POST.get('spendtime')
          f.taskname =request.POST.get('taskname')
+         
          f.save()
        print TimeSheet.objects.all()
-       return redirect('/system/timesheet/'+employeeid+'/')
+       return redirect('/system/timesheet/'+employeeid+'/'+projectid+'/'+month+'/'+year+'/')
 
 
 
@@ -109,6 +155,21 @@ class UpdateTaskPageView(View):
           task.spendtime = spendtime
        task.save()
        return redirect('/system/home')
+
+class UpdateDatePageView(View):
+   def get(self,request,taskid):
+       return render(request,'system/updatedate.html' ,{'taskid':taskid})
+   def post(self,request,taskid):
+       task=Task.objects.get(id=taskid)
+       startdate = request.POST.get('startdate')
+       enddate = request.POST.get('enddate')
+       if(startdate):
+           task.startdate = startdate
+       if(enddate):
+          task.enddate = enddate
+       task.save()
+       return redirect('/system/home')
+
 
 
 class TaskPageView(View) :
@@ -141,7 +202,7 @@ class CreateProjectPageView(View):
         form = ProjectForm(request.POST)
         if form.is_valid():
           f=form.save(commit=False)
-          f.createdby=managerid
+          f.createdby=managerid 
           f.save()
           return redirect('/system/project/'+managerid+'/')
         else :

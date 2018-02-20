@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [  
     url(r'^home',views.HomePageView.as_view(),name='home'),
     url(r'^updatetask/(?P<taskid>\d+)/$',views.UpdateTaskPageView.as_view(),name='updatetask'),
+    url(r'^updatedate/(?P<taskid>\d+)/$',views.UpdateDatePageView.as_view(),name='updatedate'),
     url(r'^employee/(?P<managerid>\d+)/$',views.EmployeePageView.as_view(),name='employee'),
     url(r'^employeetask/(?P<projectid>\d+)/(?P<employeeid>\d+)/$',views.EmployeeTaskPageView.as_view(),name='employeetask'),
     url(r'^employeeprojects/(?P<employeeid>\d+)/$',views.EmployeeProjectPageView.as_view(),name='employeeprojects'),
@@ -17,6 +18,6 @@ urlpatterns = [
     url(r'^updateprofile/(?P<employeeid>\d+)/$',views.UpdateProfilePageView.as_view(),name='updateprofile'),
     url(r'^deleteprofile/(?P<employeeid>\d+)/(?P<managerid>\d+)/$',views.DeleteProfilePageView.as_view(),name='deleteprofile'),
     url(r'^deleteproject/(?P<projectid>\d+)/(?P<managerid>\d+)/$',views.DeleteProjectPageView.as_view(),name='deleteproject'),
-    url(r'^timesheetform/(?P<employeeid>\d+)/(?P<day>\d+)/$',views.TimeSheetFormPageView.as_view(),name='timesheetform'),
-    url(r'^timesheet/(?P<employeeid>\d+)/$',views.TimeSheetPageView.as_view(),name='timesheet'),
+    url(r'^timesheetform/(?P<employeeid>\d+)/(?P<projectid>\d+)/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/$',views.TimeSheetFormPageView.as_view(),name='timesheetform'),
+    url(r'^timesheet/(?P<employeeid>\d+)/(?P<projectid>\d+)/(?P<month>\d+)/(?P<year>\d+)/$',views.TimeSheetPageView.as_view(),name='timesheet'),
 ]
