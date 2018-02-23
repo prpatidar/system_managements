@@ -1,0 +1,34 @@
+
+<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
+<center>
+<h1>   
+ <br> <br><a href="{% url 'createemployee' manager_id=manager_id%}"> Create Employee </a>
+
+
+</h1>
+<table width="80%">
+<tr bgcolor="#ffff80">
+	<th>User ID </th>
+  <th>Manager ID</th>
+  <th> Full Name</th>
+  <th>Username </th>
+  <th>EmailID</th>
+  <th>Role</th>
+</tr>
+{% for user in users  %}
+    <tr bgcolor="#ffcccc">   
+      <td>{{user.id}}</td>  
+      <td>{{user.createdby}}</td>
+      <td>{{user.get_full_name}}
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.role}}</td>
+
+      <td ><a href="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a></td>
+      <td ><a href="{% url 'deleteprofile' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a></td>
+  </tr>
+{% endfor %}
+</table>
+</center>
+

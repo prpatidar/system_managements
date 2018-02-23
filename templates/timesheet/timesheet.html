@@ -1,0 +1,73 @@
+<a href="{% url 'account_logout' %}">logout</a>
+<a href="{% url 'home' %}">Home </a>
+
+<center>
+<h1> Time Sheet  <br> </h1>
+<!-- <h2>{{project.title}}   </h2> -->
+
+
+
+<table  width="20%">
+  <tr>
+    <th bgcolor="#e6e6ff"> 
+      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=previousmonth year=year %}"><b>  < </b></a> </th> 
+    <th> <font color="green" ><b> {{monthname}}  </b> </font> </th>
+    <th bgcolor="#e6e6ff"> 
+      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
+  </tr>
+  <tr>
+    <th bgcolor="#e6e6ff"> 
+      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=previousyear %}"><b>  < </b></a> </th> 
+    <th> <font color="green" ><b> {{year}}  </b> </font> </th>
+    <th bgcolor="#e6e6ff" > 
+      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
+  </tr>
+</table>
+<br>
+<table width="90%" >
+<tr bgcolor="#ffff80">
+<th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
+</tr>
+{% for i in  days %}
+    {% if forloop.counter == 0 or forloop.counter == 8 %}
+     <tr >
+    {% endif %}
+       {% if today == i and month == currentmonth and year == currentyear %}
+          <td height="80px" bgcolor="#ccccff"> 
+            {{today}}{{i}}
+          <b>Today</b> 
+          {% else %}
+
+          <td height="80px" bgcolor="#ffcccc">
+           
+          {% endif %}
+             {% if i != 0  %} 
+               {% if i in daylist %}
+              <a href="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}"> <b><font color="black" >{{i}}</font></b>  </a>
+               <br>
+                 {% for timesheet in timesheets %}
+                  {% if timesheet.day == i %}
+                   <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
+                   <font color="blue" >S.Time: </font>{{timesheet.spendtime}}<br>
+                  {% endif %}
+                 {% endfor %}  
+              {% endif %}
+              {% if i not in daylist %}
+              {{i}}
+               <br>
+                 {% for timesheet in timesheets %}
+                  {% if timesheet.day == i %}
+                   <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
+                   <font color="blue" >S.Time: </font>{{timesheet.spendtime}}<br>
+                  {% endif %}
+                 {% endfor %}  
+              {% endif %}
+           {% endif %} 
+         </td>
+    {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 or forloop.counter == 35 %}
+     </tr>
+    {% endif %}
+ {% endfor %}
+
+</table>
+</center>

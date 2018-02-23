@@ -1,0 +1,12 @@
+<a href="{% url 'home' %}">Home </a>
+  <br><br><br><br><br> 
+<center>
+<h1> Create Employee </h1><br><br>
+ 
+<form action="{% url 'createemployee' manager_id=manager_id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+<input type="submit" value="Create Employee" />
+</form>
+</center>
