@@ -1,17 +1,28 @@
-<a href="{% url 'home' %}">Home </a>
-  <br><br><br><br><br> 
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
+
 <center>
+
+<form class="form-signin" action="{% url 'createtask' project_id=project_id manager_id=manager_id  %}" method="post">
+   <div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+</div> 
 <h1> Create Task </h1><br><br>
- For Project ID : {{projectid}}
-<form action="{% url 'createtask' project_id=project_id manager_id=manager_id  %}" method="post">
+
     {% csrf_token %}
     {{ form.as_p }}
-    <select name="employee_id"> 
+     Emp ID :<select name="employee_id"> 
     	{% for employee in employees %}
             <option>{{employee.id}}</option>
     	{% endfor %}
  
     </select>
-<input type="submit" value="Create Task" />
+<button class="button button2" type="submit" >Create Task </button>
 </form>
 </center>

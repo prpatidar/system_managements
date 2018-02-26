@@ -1,7 +1,14 @@
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
 <center>
-<br><br><br><br><br>
+<br><br><br><br><br><br><br>
 <h1> SYSTEM MANAGEMENTS<br><br>
-<a href="{% url 'account_login' %}"> Login </a><br>
-<a href="{% url 'account_signup' %}"> Signup </a></h1>
-<a href="{% url 'account_logout' %}">logout</a>
+<a class="buttonlink" href="{% url 'account_login' %}"> Login </a>
+<a class="buttonlink" href="{% url 'account_signup' %}"> Signup </a></h1>
+<!-- <a href="{% url 'account_logout' %}">logout</a> -->
 </center>

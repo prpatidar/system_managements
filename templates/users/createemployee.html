@@ -1,12 +1,20 @@
-<a href="{% url 'home' %}">Home </a>
-  <br><br><br><br><br> 
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
 <center>
-<h1> Create Employee </h1><br><br>
  
-<form action="{% url 'createemployee' manager_id=manager_id %}" method="post">
+<form class="form-signin"  action="{% url 'createemployee' manager_id=manager_id %}" method="post">
+   <div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+</div>
+<h1> Create Employee </h1><br><br>
+
     {% csrf_token %}
     {{ form.as_p }}
-    
-<input type="submit" value="Create Employee" />
+<button class="button button2" type="submit" >Create Employee </button>
 </form>
 </center>

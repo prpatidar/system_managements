@@ -61,17 +61,6 @@ class TimeSheetPageView(View):
         response['currentyear'] = date.year
         response['currentmonth'] = date.month
         response['monthname'] = calendar.month_name[month]
-        return render(request,'timesheet/timesheet.html', response )
-             
-
-timesheet_page_view = TimeSheetPageView.as_view()
-
-
-class TimeSheetFormPageView(View):
-    
-    def get(self, request, employee_id, project_id, day, month, year):
-        response = { 'employee_id': employee_id, 'day' : day, 'project_id': project_id, 'month': month, 'year': year }
-        date = datetime.datetime.now().date()
         tasks=Task.objects.filter(employee_id=employee_id, project_id=project_id)
         tasklist=[]
         for task in tasks :
@@ -82,9 +71,18 @@ class TimeSheetFormPageView(View):
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
-        return render(request,'timesheet/timesheetform.html', response )
+        return render(request,'timesheet/timesheet.html', response )
+             
+
+timesheet_page_view = TimeSheetPageView.as_view()
+
+
+class TimeSheetFormPageView(View):
+    
+  
     
     def post(self, request, employee_id, project_id, day, month, year):
+        day=request.POST.get('day')
         c=calendar.TextCalendar(calendar.MONDAY)
         date=datetime.datetime.now()
         try :

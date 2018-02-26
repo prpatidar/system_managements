@@ -1,14 +1,30 @@
-<a href="{% url 'home' %}">Home </a>
-<center>
-   <br><br><br><br>
-	<h1> Update Task Dates</h1>
-	<h2>Task ID: {{task_id}}</h2>
-   <br><br>
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+</div>
 
-<form action="{% url 'updatedate' task_id=task_id %}" method="post">
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
+
+<center>
+  
+	
+
+<form class="form-signin"  action="{% url 'updatedate' task_id=task_id %}" method="post">
+	
+<h1> Update Task Dates</h1>
+	<h2>Task ID: {{task_id}}</h2>
+ 
 	{% csrf_token %}
-	 Start Date<input type="date" data-date-format="yyyy-MM-dd" name="startdate"><br><br><br>
-	 Spend Time<input type="date" name="enddate"><br><br>
-	 <input type="submit" name="Update"><br>
+	 Start Date<input type="date" data-date-format="yyyy-MM-dd" name="startdate"><br>
+	 End Date<input type="date" name="enddate"><br>
+	<button class="button button2" type="submit" >Update Dates</button>
 </form>	 
 </center>

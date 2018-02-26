@@ -1,34 +1,59 @@
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+</div>
 
-<a href="{% url 'account_logout' %}">logout</a>
-<a href="{% url 'home' %}">Home </a>
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+<script src="{% static 'js/dataTables.js' %}" ></script>
+</head>
+
+<div class="table-block">
+
+
 <center>
 <h1>   
- <br> <br><a href="{% url 'createemployee' manager_id=manager_id%}"> Create Employee </a>
+ <a href="{% url 'createemployee' manager_id=manager_id%}"> Create Employee </a>
 
 
 </h1>
-<table width="80%">
-<tr bgcolor="#ffff80">
-	<th>User ID </th>
-  <th>Manager ID</th>
-  <th> Full Name</th>
-  <th>Username </th>
-  <th>EmailID</th>
-  <th>Role</th>
-</tr>
-{% for user in users  %}
-    <tr bgcolor="#ffcccc">   
-      <td>{{user.id}}</td>  
-      <td>{{user.createdby}}</td>
-      <td>{{user.get_full_name}}
-      <td>{{user.username}}</td>
-      <td>{{user.email}}</td>
-      <td>{{user.role}}</td>
-
-      <td ><a href="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a></td>
-      <td ><a href="{% url 'deleteprofile' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a></td>
-  </tr>
+<table id="myTable" class="display">
+    <thead>
+        <tr >
+            <th>User ID </th>
+            <th>Manager ID</th>
+            <th> Full Name</th>
+            <th>Username </th>
+            <th>EmailID</th>
+            <th>Role</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users  %}
+        <tr >   
+            <td>{{user.id}}</td>  
+            <td>{{user.createdby}}</td>
+            <td>{{user.get_full_name}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.role}}</td>
+            <td ><a href="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a> </td>
+            <td ><a href="{% url 'deleteprofile' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a> </td>
+        </tr>
+    </tbody>
 {% endfor %}
 </table>
 </center>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+});
+</script>
 

@@ -1,25 +1,31 @@
 
-
- 
+{% load static %}
+<div class="logout">
+    
+  <a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+ </div> 
+ <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+ </head>
 <center>
-	<br><br><br><br><br>
+	<br><br><br>
 <h1>
-  Hi {{ user.username }}!
-  <br>
+  <div class="form-signin">
+    Hi {{ user.username }}! <br>
    Role:  {{user.role}}  ID :{{user.id}}
-  
- 
   {% if user.role == "manager" %}
  <br> <br><a href="{% url 'project' manager_id=user.id %}">Create Project </a>
   
 <br>
-  <a href="{% url 'employee' manager_id=user.id %}">Employees</a>
+  <a  href="{% url 'employee' manager_id=user.id %}">Employees</a>
   {% endif %}
 
   {% if user.role == "employee" %}
- <br> <br><a href="{% url 'employeeprojects' employee_id=user.id %}"> Assigned projects </a>
+ <br> <br><a class="button" href="{% url 'employeeprojects' employee_id=user.id %}"> Assigned projects </a>
   {% endif %}
 <br>
-  <a href="{% url 'account_logout' %}">logout</a>
+
+</div>
 </h1></center>
  

@@ -1,31 +1,59 @@
-<a href="{% url 'account_logout' %}">logout</a>
-<a href="{% url 'home' %}">Home </a>
+{% load static %}
+<br>
+<div class="logout">
+    
+  <a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+  <a class="buttonlink" href="{% url 'home' %}">Home </a>
+
+ </div> 
+<br>
+ <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ </head>
+<center>
+
 
 <center>
-<h1> Time Sheet  <br> </h1>
+
+<h1> <font color="#0088BA">Time Sheet </font> <br> </h1>
 <!-- <h2>{{project.title}}   </h2> -->
 
 
 
 <table  width="20%">
   <tr>
-    <th bgcolor="#e6e6ff"> 
-      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=previousmonth year=year %}"><b>  < </b></a> </th> 
+    <th> 
+      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=previousmonth year=year %}"><b>  < </b></a> </th> 
     <th> <font color="green" ><b> {{monthname}}  </b> </font> </th>
-    <th bgcolor="#e6e6ff"> 
-      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
+    <th > 
+      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
   </tr>
   <tr>
-    <th bgcolor="#e6e6ff"> 
-      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=previousyear %}"><b>  < </b></a> </th> 
+    <th > 
+      <a  class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=previousyear %}"><b>  < </b></a> </th> 
     <th> <font color="green" ><b> {{year}}  </b> </font> </th>
-    <th bgcolor="#e6e6ff" > 
-      <a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
+    <th > 
+      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
   </tr>
 </table>
 <br>
-<table width="90%" >
-<tr bgcolor="#ffff80">
+<script type="text/javascript">
+ $(document).on("click", ".btn", function () {
+     var myBookId = $(this).data('id');
+     $("#day").val( myBookId );
+    // $('#addBookDialog').modal('show');
+});
+ 
+
+</script>
+<table width="90%"  border="1">
+<tr bgcolor=" #0088BA">
 <th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
 </tr>
 {% for i in  days %}
@@ -38,17 +66,18 @@
           <b>Today</b> 
           {% else %}
 
-          <td height="80px" bgcolor="#ffcccc">
+          <td height="80px" bgcolor="white">
            
           {% endif %}
              {% if i != 0  %} 
                {% if i in daylist %}
-              <a href="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}"> <b><font color="black" >{{i}}</font></b>  </a>
+             <button type="button" data-id="{{i}}"class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">{{i}}</button><br>
                <br>
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
+                  
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >S.Time: </font>{{timesheet.spendtime}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
                   {% endif %}
                  {% endfor %}  
               {% endif %}
@@ -58,7 +87,7 @@
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >S.Time: </font>{{timesheet.spendtime}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
                   {% endif %}
                  {% endfor %}  
               {% endif %}
@@ -71,3 +100,50 @@
 
 </table>
 </center>
+
+
+
+
+
+
+
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          
+          <h4 class="modal-title">Fill The Working Hours</h4>
+          {{month}} {{year}}
+        </div>
+        <div class="modal-body">
+         
+<center>
+<form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
+
+{% csrf_token %}
+<select name="taskname">
+  {% for task in tasklist %}
+   <option>{{task}}</option>
+  {% endfor %}
+</select><br>
+Spend Time
+<input type ="text" name="spendtime" />
+<input type="hidden" name="day" id="day" value="" />
+<br>
+<button class="button button2" type="submit" >Update </button>
+
+</form>
+</center>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>

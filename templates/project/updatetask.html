@@ -1,11 +1,26 @@
-<a href="{% url 'home' %}">Home </a>
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+</div>
+
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
 <center>
-   <br><br><br><br>
+   
+	
+
+<form class="form-signin" action="{% url 'updatetask' task_id=task_id %}" method="post">
+	
 	<h1> Update Task </h1>
 	<h2>Task ID: {{task_id}}</h2>
-   <br><br>
-
-<form action="{% url 'updatetask' task_id=task_id %}" method="post">
+   
 	{% csrf_token %}
 	 <select name="status">
 	 	<option>In Progress</option>
@@ -14,8 +29,8 @@
 	 	<option>Tested</option>
 	 	<option>Delivered</option>
 	 </select><br><br>
-	 Estimated Time<input type="text" name="estimatetime"><br><br><br>
-	 Spend Time<input type="text" name="spendtime"><br><br>
-	 <input type="submit" name="Update"><br>
+	 Estimated Time<input type="text" name="estimatetime"><br>
+	 Spend Time<input type="text" name="spendtime"><br>
+	<button class="button button2" type="submit" >Update Task </button>
 </form>	 
 </center>

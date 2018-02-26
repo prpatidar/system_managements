@@ -1,12 +1,22 @@
-<a href="{% url 'home' %}">Home </a>
- <br><br><br><br><br> 
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+</head>
+
+
 <center>
-<h1> Update Profile</h1><br><br>
+
  
-<form action="{% url 'updateprofile' employee_id=employee_id %}" method="post">
+<form class="form-signin" action="{% url 'updateprofile' employee_id=employee_id %}" method="post">
+     <div class="logout">
+<a class="buttonlink" href="{% url 'home' %}">Home </a><br>
+</div>
+
+    <h1> Update Profile</h1><br>
     {% csrf_token %}
     {{ form.as_p }}
     
-<input type="submit" value="Update Profile" />
+<button class="button button2" type="submit" >Update Profile </button>
 </form>
 </center>

@@ -1,32 +1,55 @@
-<a href="{% url 'account_logout' %}">logout</a>
-<a href="{% url 'home' %}">Home </a>
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+</div>
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+<script src="{% static 'js/dataTables.js' %}" ></script>
+</head>
+
+<div class="table-block">
+
 <center>
 <h1>   
   Projects for Employee ID<br>
   {{employeeid}}
 
 </h1>
-<table  width="80%">
-<tr bgcolor="#ffff80">
-<th>Projet ID </th>
-<th>Title </th>
-<th>Description</th>
-<th>Start Date</th>
-<th>End Date</th>
-
-</tr>
-{% for project in projects  %}
-  
-  <tr bgcolor="#ffcccc"> 
-  <td>{{project.id}}</td>
-  <td>{{project.title}}</td>
-  <td>{{project.discription}}</td>
-  <td>{{project.startdate}}</td>
-  <td>{{project.enddate}}</td>
-  <td><a href="{% url 'employeetask' project_id=project.id employee_id=employee_id %}"> View Task</a></td>
-  <td><a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=year %}">Time Sheet </a></td>
-  </tr>
-  
+<table id="myTable" class="display">
+    <thead>
+        <tr >
+            <th>Projet ID </th>
+            <th>Title </th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects  %}
+        <tr > 
+            <td>{{project.id}}</td>
+            <td>{{project.title}}</td>
+            <td>{{project.discription}}</td>
+            <td>{{project.startdate}}</td>
+            <td>{{project.enddate}}</td>
+            <td><a href="{% url 'employeetask' project_id=project.id employee_id=employee_id %}"> View Task</a></td>
+            <td><a href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=year %}"> Time Sheet </a> </td>
+        </tr>
+    </tbody>
 {% endfor %}
 </table>
 </center>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+});
+</script>
