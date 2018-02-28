@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     url(r'^project/', include('project.urls')),
     url(r'^timesheet/', include('timesheet.urls')),
+    url(r'^creditcard/', include('creditcard.urls')),
     url('', index_page_view , name='index'),
 ]

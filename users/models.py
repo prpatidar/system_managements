@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(('is_active'), default=True)
     role= models.CharField( ('role'),max_length=30,default='manager')
     createdby = models.CharField(max_length=2,default=0)
-    
+    stripetoken = models.CharField(max_length=100, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

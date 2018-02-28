@@ -11,7 +11,10 @@ h1 {
 	color : #0088BA;
 }
 a {
-  color:black;
+  color: black;
+}
+a:hover {
+  color: blue;
 }
 
 .logout {
@@ -35,9 +38,28 @@ textarea {
   background-color: #fff;
   border: 5px solid #008CBA;  
   }
+.popup {
+  max-width: 9s0%;
+  padding: 15px 35px 45px ;
+  margin: 100 auto;
+  background-color: #fff;
+  border: 5px solid #008CBA;  
+  margin-bottom: 30px;
+  }
+
 input[type=text], input[type=email] ,input[type=date] ,input[type="password"] {
     width: 100%;
     padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+select.stylesheet {
+  width: 5%;
+    padding: 5px 5px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
@@ -78,7 +100,21 @@ a.calendar-link:hover, a.calendar-link:active {
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
-    padding: 8px 32px;
+    padding: 5px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+.popupbutton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 5px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;

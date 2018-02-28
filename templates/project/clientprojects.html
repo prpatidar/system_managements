@@ -1,0 +1,117 @@
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+</div>
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+<script src="{% static 'js/dataTables.js' %}" ></script>
+
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<div class="table-block">
+
+<center>
+<h1>   
+  Projects for Your Client ID<br>
+  {{clientid}}
+
+</h1>
+<table id="myTable" class="display">
+    <thead>
+        <tr >
+            <th>Projet ID </th>
+            <th>Title </th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+            <th></th> 
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects  %}
+        <tr > 
+            <td>{{project.id}}</td>
+            <td>{{project.title}}</td>
+            <td>{{project.discription}}</td>
+            <td>{{project.startdate}}</td>
+            <td>{{project.enddate}}</td>
+            <td><button type="button" data-id="{{project.id}}" class="button button2 update_button" data-toggle="modal" data-target="#myModal">Update</button></td>
+            <td><a class="button button2" href="{% url 'clienttimesheet' employeeid=1 project_id=project.id client_id=client_id month=month year=year %}"> Time Sheet </a> </td>
+        </tr>
+    </tbody>
+{% endfor %}
+</table>
+</center>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+});
+</script>
+
+ 
+
+
+
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          
+         <center> <h4 class="modal-title">Update Project Details</h4>
+          </center>
+        </div>
+        <div class="modal-body">
+         
+<center>
+ <div class="popup">
+<form action="{% url 'projectform' %}" method="post">
+{% csrf_token %}
+ <b> Payment Type</b> <br><br>
+ <input type="radio" name="payment_type" value="Daliy" checked> Daliy  
+  <input type="radio" name="payment_type" value="Weekly" > Weekly
+  <input type="radio" name="payment_type" value="Biweekly"> Biweekly
+  <input type="radio" name="payment_type" value="Monthly"> Monthly  
+  
+  <input type="hidden" name="project_id" id="project_id"  /> <br><br>
+ <b>Hourly Rate </b><input type="text" name="hourlyrate" /><br>
+ 
+
+
+</div>
+</center>
+
+        </div>
+        <div class="modal-footer">
+            <button class="button button2" type="submit" >Update </button>
+            </form>
+          <button type="button" class="button button2" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<script type="text/javascript">
+ $(document).on("click", ".update_button", function () {
+    console.log("hello popup")
+    var myBookId = $(this).data('id');
+    console.log(myBookId)
+    $("#project_id").val( myBookId );
+    // $('#addBookDialog').modal('show');
+});
+ </script>

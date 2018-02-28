@@ -1,0 +1,134 @@
+{% load static %}
+
+<div class="logout">
+    
+  <a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+  <a class="buttonlink" href="{% url 'home' %}">Home </a>
+
+ </div> 
+<br>
+ <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ </head>
+<center>
+
+<script type="text/javascript">
+ $(document).on("click", ".popupbutton", function () {
+
+     var myBookId = $(this).data('id');
+     alert(myBookId)
+     $("#day").val( myBookId );
+   
+});
+</script>
+<h1> <font color="#0088BA">Time Sheet for Employee ID {{employeeid}}</font> </h1>
+
+<form action="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" method="get">
+ <font color="#0088BA"> Emp ID :</font><select class="stylesheet" name="employee_id" id="employee_id"> 
+      {% for employee in employees %}
+            <option>{{employee}}</option>
+      {% endfor %}
+          </select>
+ <button class="button" type="submit"> Change </button>         
+</form>
+<table  width="20%">
+  <tr>
+    <th> 
+      <a  class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=previousmonth year=year %}"><b>  < </b></a> </th> 
+    <th> <font color="green" ><b> {{monthname}}  </b> </font> </th>
+    <th > 
+      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
+  </tr>
+  <tr>
+    <th > 
+      <a  class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=previousyear %}"><b>  < </b></a> </th> 
+    <th> <font color="green" ><b> {{year}}  </b> </font> </th>
+    <th > 
+      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
+  </tr>
+</table>
+<br>
+
+</script>
+<table width="90%"  border="1">
+<tr bgcolor=" #0088BA">
+<th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
+</tr>
+{% for i in  days %}
+    {% if forloop.counter == 0 or forloop.counter == 8 %}
+     <tr >
+    {% endif %}
+       {% if today == i and month == currentmonth and year == currentyear %}
+          <td height="80px" bgcolor="#ccccff"> 
+            {{today}}{{i}}
+          <b>Today</b> 
+          {% else %}
+
+          <td height="80px" bgcolor="white">
+           
+          {% endif %}
+             {% if i != 0  %} 
+               <a href="" class="buttonlink" >{{i}}</a>
+               <br>
+                 {% for timesheet in timesheets %}
+                  {% if timesheet.day == i %}
+                   <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                  
+                   {% if timesheet.status == "rejected" %}
+                   <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year  %}" >Aprove </a> 
+                    <button data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
+                   {% endif %}
+                  {% endif %}
+                 {% endfor %}  
+              
+           {% endif %} 
+         </td>
+    {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 or forloop.counter == 35 %}
+     </tr>
+    {% endif %}
+ {% endfor %}
+
+</table>
+</center>
+
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+       
+        <div class="modal-body">
+         
+<center>
+<div class="table-block" >
+
+<form  action="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day='1' month=month year=year  %}" method="post">
+
+{% csrf_token %}
+Reason For Rejection
+<input type ="text" name="comment" />
+<input type="hidden" name="day" id="day" />
+<br>
+<button class="button button2" type="submit" >Update </button>
+ <button type="button" class="button button2" data-dismiss="modal"> Close </button>
+</form>
+</div>
+</center>
+
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+  
+</div>

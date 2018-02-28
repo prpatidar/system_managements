@@ -1,11 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.core.mail import send_mail
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.base_user import AbstractBaseUser
 
 from users.models import User
         
@@ -17,6 +12,9 @@ class Project(models.Model):
     startdate = models.DateField(null=True, blank=True)
     enddate = models.DateField(null=True, blank=True) #auto_now_add=False,
     createdby = models.CharField(blank=True, max_length=2) #Need To Do
+    client = models.ForeignKey(User, blank=True ) 
+    hourlyrate = models.CharField(max_length=10, blank=True)
+    payment_type = models.CharField(max_length=10, blank=True) 
 
 class Task(models.Model):
     project= models.ForeignKey(Project, blank=True)

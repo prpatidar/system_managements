@@ -9,7 +9,7 @@ class ProjectForm(ModelForm):
 
      class Meta:
         model = Project
-        fields = ['title', 'discription', 'status', 'startdate', 'enddate']
+        fields = ['title', 'discription', 'status', 'startdate', 'enddate' ]
 
 class TaskForm(ModelForm):
 

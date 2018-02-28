@@ -1,0 +1,63 @@
+<br>
+<div class="logout">
+<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
+<a class="buttonlink" href="{% url 'home' %}">Home </a>
+</div>
+
+{% load static %}
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+<script src="{% static 'js/dataTables.js' %}" ></script>
+
+</head>
+
+<div class="table-block">
+
+<center>
+<h1>   
+<a class="button" href="{% url 'createcreditcard' client_id=client_id%}"> Add Credit Card </a>
+</h1>
+<table id="myTable" class="display">
+    <thead>
+        <tr >
+            <th>Client ID </th>
+            <th>Card Holder</th>
+            <th>Card Number</th>
+            <th>CVV </th>
+            <th>Expiry Date</th>
+            <th>Card Token</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in cards  %}
+        <tr > 
+            <td>{{card.client_id}}</td>
+            <td>{{card.card_holder}}</td>
+            <td>{{card.card_number}}</td>
+            <td>{{card.cvv_number}}</td>
+            <td>{{card.expirydate}}</td>
+            <td>{{card.card_token}}</td>
+            <td>{% if card.primary == True %}<b> Primary Card </b>
+                {% else %}
+                <a class="button" href="{% url 'primarycreditcard' client_id=client_id card_id=card.id%}">Primary </a>
+                {% endif %}
+            </td>
+            <td><a class="button" href="{% url 'deletecreditcard' client_id=client_id card_id=card.id%}"> Delete </a></td>
+        </tr>
+    </tbody>
+{% endfor %}
+</table>
+</center>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+});
+</script>
+
+ 
+

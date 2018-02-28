@@ -19,7 +19,6 @@
 <center>
 
 
-<center>
 
 <h1> <font color="#0088BA">Time Sheet </font> <br> </h1>
 <!-- <h2>{{project.title}}   </h2> -->
@@ -44,7 +43,7 @@
 </table>
 <br>
 <script type="text/javascript">
- $(document).on("click", ".btn", function () {
+ $(document).on("click", ".popupbutton", function () {
      var myBookId = $(this).data('id');
      $("#day").val( myBookId );
     // $('#addBookDialog').modal('show');
@@ -60,24 +59,31 @@
     {% if forloop.counter == 0 or forloop.counter == 8 %}
      <tr >
     {% endif %}
-       {% if today == i and month == currentmonth and year == currentyear %}
-          <td height="80px" bgcolor="#ccccff"> 
-            {{today}}{{i}}
-          <b>Today</b> 
-          {% else %}
-
-          <td height="80px" bgcolor="white">
+       
+     <td height="80px" bgcolor="white">
            
-          {% endif %}
-             {% if i != 0  %} 
+           {% if i != 0  %} 
                {% if i in daylist %}
-             <button type="button" data-id="{{i}}"class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">{{i}}</button><br>
-               <br>
+             
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
-                  
+                     {% if timesheet.status == "aprove" %}
+                     {{i}}<br>
+                     {%else%}
+                   <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal">{{i}}</button><br>
+                   {% endif%}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                   {% if timesheet.status == "aprove" %}
+                   <b>{{timesheet.status}}</b>
+                   {%endif %}
+                   {% if timesheet.status == "pending" %}
+                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
+                   {% endif %}
+                   {% if timesheet.status == "rejected" %}
+                   <b>{{timesheet.reject_comment}}</b>
+                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
+                   {% endif %}
                   {% endif %}
                  {% endfor %}  
               {% endif %}
@@ -88,6 +94,16 @@
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                    {% if timesheet.status == "submit" or timesheet.status == "aprove" %}
+                  <b>{{timesheet.status}}</b>
+                   {% endif%}
+                   {% if timesheet.status == "pending" %}
+                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
+                   {% endif %}
+                   {% if timesheet.status == "rejected" %}
+                   <b>{{timesheet.reject_comment}}</b>
+                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
+                   {% endif %}
                   {% endif %}
                  {% endfor %}  
               {% endif %}
@@ -120,6 +136,7 @@
         <div class="modal-body">
          
 <center>
+
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
 
 {% csrf_token %}
@@ -130,17 +147,16 @@
 </select><br>
 Spend Time
 <input type ="text" name="spendtime" />
-<input type="hidden" name="day" id="day" value="" />
+<input type="hidden" name="day" id="day" />
 <br>
 <button class="button button2" type="submit" >Update </button>
+<button type="button" class="button button2" data-dismiss="modal">Close</button>
 
 </form>
 </center>
 
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+        
       </div>
       
     </div>

@@ -11,3 +11,5 @@ class TimeSheet(models.Model):
     year = models.IntegerField()
     employee_id= models.IntegerField()
     spendtime = models.CharField(max_length=10,null=True,blank=True)
+    status = models.CharField(max_length=10, default="pending")
+    reject_comment = models.TextField(max_length=150,blank=True,null=True)

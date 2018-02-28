@@ -17,19 +17,20 @@
 
 <center>
 <h1>   
-<a class="buttonlink" href="{% url 'createproject' manager_id=manager_id%}"> Create project </a>
+<a class="button" href="{% url 'createproject' manager_id=manager_id%}"> Create project </a>
 </h1>
 
 <table  id="myTable" class="display">
 	<thead>
         <tr >
             <th>Project ID </th>
+            <th> Client ID </th>
 			<th>Title </th>
 			<th>Description</th>
 			<th>Status</th>
-			<th>Start Date</th>
-			<th>End Date</th>
+			<th>Rate</th>
 			<th>  </th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,12 +38,13 @@
   
   		<tr>   
 			  <td>{{project.id}}</td>   
+			  <td>{{project.client}}</td>
 			  <td><a href="{% url 'task' project_id=project.id manager_id=manager_id%}" > {{project.title}} </a> </td> 
 			  <td>{{project.discription}}</td>
 			  <td>{{project.status}}</td>
-			  <td>{{project.startdate}}</td>
-			  <td>{{project.enddate}}</td>
+			  <td>{{project.hourlyrate}}</td>
 			  <td ><a href="{% url 'deleteproject' project_id=project.id manager_id=manager_id%}">Delete Project</a></td>
+			  <td ><a href="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" >Time Sheet</a></td>
   		</tr>
     </tbody>
 {% endfor %}

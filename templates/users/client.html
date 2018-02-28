@@ -17,7 +17,7 @@
 
 <center>
 <h1>   
- <a class="button" href="{% url 'createemployee' manager_id=manager_id%}"> Create Employee </a>
+ <a class="button" href="{% url 'createclient' manager_id=manager_id%}"> Create Client </a>
 
 
 </h1>
@@ -32,6 +32,7 @@
             <th>Role</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,8 +44,9 @@
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
+            <td>{{user.stripetoken}}</td>
             <td ><a href="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a> </td>
-            <td ><a href="{% url 'deleteprofile' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a> </td>
+            <td ><a href="{% url 'deleteclient' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a> </td>
         </tr>
     </tbody>
 {% endfor %}

@@ -40,10 +40,25 @@ class EmployeeProjectPageView(View):
 
 employee_project_page_view = EmployeeProjectPageView.as_view()
 
+class ClientProjectPageView(View):
+
+    def get(self, request, client_id):
+        response = {'client_id': client_id}
+        date = datetime.datetime.now()
+        response['month'] = date.month
+        response['year'] = date.year
+        response['projects'] = Project.objects.filter(client_id=client_id)
+        return render(request, 'project/clientprojects.html', response)
+
+client_project_page_view = ClientProjectPageView.as_view()
+
 class ProjectPageView(View):
 
     def get(self, request, manager_id):
         response = {'manager_id': manager_id}
+        date = datetime.datetime.now()
+        response['month'] = date.month
+        response['year'] = date.year
         response['projects'] = Project.objects.filter(createdby=manager_id)
         return render(request, 'project/project.html', response)
 
@@ -79,6 +94,22 @@ class UpdateTaskPageView(View):
 
 update_task_page_view = UpdateTaskPageView.as_view()
 
+class ProjectFormPageView(View):
+
+    def post(self, request):
+        project_id=request.POST.get('project_id')
+        print request.POST
+        project=Project.objects.get(id=int(project_id))
+        payment_type =request.POST.get('payment_type')
+        if payment_type:
+            project.payment_type = payment_type
+        hourlyrate = request.POST.get('hourlyrate')
+        if hourlyrate:
+            project.hourlyrate = hourlyrate
+        project.save()
+        return redirect(reverse('home'))
+
+project_form_page_view = ProjectFormPageView.as_view()
 
 class UpdateDatePageView(View):
 
@@ -114,16 +145,19 @@ class CreateProjectPageView(View):
     
     def get(self, request, manager_id):
         response = {'manager_id': manager_id }
+        response['clients']=User.objects.filter(role="client", createdby=manager_id)
         response['form'] = ProjectForm()
         return render(request, 'project/createproject.html', response)
     
     def post(self, request, manager_id):
         response = {'manager_id': manager_id }
+
         response['form'] = ProjectForm()
         form = ProjectForm(request.POST)
         if form.is_valid():
             f=form.save(commit=False)
             f.createdby=manager_id 
+            f.client_id= request.POST.get('client_id')
             f.save()
             return redirect(reverse('project' ,kwargs ={'manager_id': manager_id}))
         else:

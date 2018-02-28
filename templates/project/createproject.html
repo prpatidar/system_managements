@@ -5,19 +5,22 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
 </head>
 
-
-
-  <br>
 <center>
 
  
 <form class="form-signin" action="{% url 'createproject' manager_id=manager_id  %}"method="post">
   <div class="logout">
 <a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div>
-<h1> Create Project </h1><br>
+</div><br>
+<h1> Create Project </h1>
     {% csrf_token %}
     {{ form.as_p }}
-<button class="button button2" type="submit" >Create Project </button>
+    <button class="button button2" type="submit" >Create Project </button>
+     Client ID :<select name="client_id"> 
+    	{% for client in clients %}
+            <option value="{{client.id}}">{{client.id}}</option>
+    	{% endfor %}
+    	
+
 </form>
 </center>

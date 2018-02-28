@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'users',
     'project',
     'timesheet',
+    'creditcard',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

@@ -1,3 +1,4 @@
+import stripe
 import calendar,datetime
 from collections import OrderedDict
 
@@ -48,6 +49,15 @@ class EmployeePageView(View) :
 
 employee_page_view = EmployeePageView.as_view()
 
+class ClientPageView(View) :
+
+    def get(self, request, manager_id):
+        response = {'manager_id':manager_id}
+        response['users'] = User.objects.filter(role='client',createdby=manager_id)
+        return render(request,'users/client.html', response )
+
+client_page_view = ClientPageView.as_view()
+
 
 class DeleteProfilePageView(View):
 
@@ -56,6 +66,21 @@ class DeleteProfilePageView(View):
         return redirect(reverse('employee' ,kwargs ={'manager_id': manager_id}))
 
 delete_profile_page_view = DeleteProfilePageView.as_view()
+
+
+
+class DeleteClientPageView(View):
+
+    def get(self, request, employee_id, manager_id):
+        user = User.objects.get(id=employee_id)
+        stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
+        cu = stripe.Customer.retrieve(user.stripetoken)
+        print user.stripetoken
+        cu.delete()
+        User.objects.filter(id=employee_id).delete()
+        return redirect(reverse('client' ,kwargs ={'manager_id': manager_id}))
+
+delete_client_page_view = DeleteClientPageView.as_view()
 
 
 class CreateEmployeePageView(View):
@@ -79,6 +104,33 @@ class CreateEmployeePageView(View):
             return render(request,'users/createemployee.html', response)
 
 create_employee_page_view = CreateEmployeePageView.as_view()
+
+
+class CreateClientPageView(View):
+
+    def get(self, request, manager_id):
+        form = EmployeeForm()
+        form.fields['role'].widget = forms.HiddenInput()
+        response = {'form':form,'manager_id':manager_id}
+        return render(request,'users/createclient.html', response)
+
+    def post(self, request, manager_id):
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            employee=form.save(commit=False)
+            employee.role="client"
+            employee.createdby=manager_id
+            stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
+            stripetoken = stripe.Customer.create(description=employee.email)
+            employee.stripetoken=stripetoken['id']
+            print employee.stripetoken
+            employee.save()
+            return redirect(reverse('client' ,kwargs ={'manager_id': manager_id}))
+        else :
+            response = {'form':form,'manager_id':manager_id}
+            return render(request,'users/createclient.html', response)
+
+create_client_page_view = CreateClientPageView.as_view()
 
 
 class UpdateProfilePageView(View):
