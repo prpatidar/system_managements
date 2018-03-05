@@ -17,14 +17,14 @@
 
 <form class="form-signin" method="POST" action="{% url 'account_login' %}">
   <center><h1>{% trans "Sign In" %} </h1> </center>
-  <p>{% blocktrans %}If you have not created an account yet, then
-<a class="buttonlink" href="{{ signup_url }}">sign up</a> {% endblocktrans %}</p>
+  
+
   {% csrf_token %}
   {{ form.as_p }}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button class="button button2" type="submit">{% trans "Sign In" %}</button>
+  <button class="button button2" type="submit">{% trans "Sign In" %} &raquo;</button><a class="button button2" href="{{ signup_url }}">sign up</a> 
   <a  href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
   
 </form>

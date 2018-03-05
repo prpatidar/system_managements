@@ -67,10 +67,12 @@
                <a href="" class="buttonlink" >{{i}}</a>
                <br>
                  {% for timesheet in timesheets %}
-                  {% if timesheet.day == i %}
+                
+                  {% if timesheet.day == i and timesheet.status == "aprove" %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
                   {% endif %}
+                
                  {% endfor %}  
               
            {% endif %} 

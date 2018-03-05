@@ -55,6 +55,7 @@ class TimeSheetPageView(View):
                 daylist.append(days[totaldays-5])
                 totaldays -= 1
                 today += 1
+        print daylist
        #TimeSheet.objects.all().delete()
         response['daylist'] = daylist
         response['today'] = date.day
@@ -110,28 +111,77 @@ time_sheet_form_page_view = TimeSheetFormPageView.as_view()
 
 class TimeSheetActionPageView(View):
 
-    def get(self, request, employee_id, project_id, day, month, year):
-        TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year).update(status="submit")
-        return redirect(reverse('timesheet' ,kwargs ={'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year}))
-
+    def get(self, request, employee_id, project_id, day, month, year , period):
+         period = int(period)
+         day_int = int(day)
+         if period == 1 :
+            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="pending").update(status="submit")
+            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="rejected").update(status="submit",reject_comment="")
+         if period == 2 :
+            i = day_int
+            while (i > day_int-8) :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="pending").update(status="submit")
+                TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="rejected").update(status="submit",reject_comment="")
+                i = i-1
+         if period == '3' :
+            i = day_int
+            while i < 32 :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="pending").update(status="submit")
+                TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="rejected").update(status="submit",reject_comment="")
+                i = i+1
+         
+         t = TimeSheet.objects.filter(employee_id=employee_id)
+         for t in t :
+            print t.status , t.reject_comment,t.month,t.year,t.day
+         return redirect(reverse('timesheet' ,kwargs ={'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year}))
+    
 time_sheet_action_page_view = TimeSheetActionPageView.as_view()
 
 
 class TimeSheetManagerActionPageView(View):
 
-    def get(self, request, employee_id, project_id, manager_id, day, month, year):
-        TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year).update(status="aprove")
-        return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id ,'month' : month, 'year': year}))
+    def get(self, request, employee_id, project_id, manager_id, day, month, year,period):
+         period = int(period)
+         day = int(day)
+         if period == 1 :
+            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+         if period == 2 :
+            i = day
+            while (i > day-8) :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+                i = i-1
+         if period == '3' :
+            i = day
+            while i < 32 :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+                i = i+1
+        
+         t = TimeSheet.objects.filter(employee_id=employee_id)
+         for t in t :
+            print t.status , t.reject_comment,t.month,t.year,t.day,project_id
+         return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id ,'month' : month, 'year': year}))
 
-
-    def post(self, request, employee_id, project_id, manager_id, day, month, year):
-         day=request.POST.get('day')
-         print "hloo"+day
+    def post(self, request, employee_id, project_id, manager_id, day, month, year,period):
+         period = int(request.POST.get('period'))
+         day=int(request.POST.get('day'))
+         print day + period
          comment = request.POST.get('comment')
-         timesheet=TimeSheet.objects.get(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year)
-         timesheet.status = "rejected"
-         timesheet.reject_comment = comment
-         timesheet.save()
+         if period == 1 :
+            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="rejected",reject_comment=comment)
+         if period == 2 :
+            i = day
+            while i >= day-7 :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="rejected",reject_comment=comment)
+                i = i-1
+         if period == 3 :
+            i = day
+            while i <= 31 :
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="rejected",reject_comment=comment)
+                i = i+1
+
+         t = TimeSheet.objects.all()
+         for t in t :
+            print t.status + " "
          return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id , 'month' : month, 'year': year}))
 
 
@@ -205,8 +255,9 @@ client_timesheet_page_view = ClientTimeSheetPageView.as_view()
 
 class ManagerTimeSheetPageView(View):
 
-    def get(self, request, employeeid,  project_id,manager_id, month,year):
-
+    def get(self, request, employeeid,  project_id,manager_id, month, year ):
+        # TimeSheet.objects.filter(day=26).delete()
+        # TimeSheet.objects.filter(day=28).delete()
         emp_id= request.GET.get('employee_id')
         if emp_id :
             employeeid=emp_id
@@ -260,7 +311,6 @@ class ManagerTimeSheetPageView(View):
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
         response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
-        print response['employees']
         return render(request,'timesheet/managertimesheet.html', response )
              
 

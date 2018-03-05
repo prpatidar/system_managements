@@ -58,7 +58,7 @@ input[type=text], input[type=email] ,input[type=date] ,input[type="password"] {
 }
 
 select.stylesheet {
-  width: 5%;
+  width: 100%;
     padding: 5px 5px;
     margin: 8px 0;
     display: inline-block;
@@ -67,6 +67,15 @@ select.stylesheet {
     box-sizing: border-box;
 }
 
+select.dropdown {
+  width: 5%;
+    padding: 5px 5px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 a.buttonlink:link, a.buttonlink:visited {
     background-color: white;
     color: black;

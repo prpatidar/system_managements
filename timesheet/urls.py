@@ -12,6 +12,6 @@ urlpatterns = [
     url(r'^timesheet/(?P<employee_id>\d+)/(?P<project_id>\d+)/(?P<month>\d+)/(?P<year>\d+)/$' , timesheet_page_view , name='timesheet' ) ,
     url(r'^clienttimesheet/(?P<employeeid>\d+)/(?P<project_id>\d+)/(?P<client_id>\d+)/(?P<month>\d+)/(?P<year>\d+)/$' , client_timesheet_page_view , name='clienttimesheet' ) ,
     url(r'^managertimesheet/(?P<employeeid>\d+)/(?P<project_id>\d+)/(?P<manager_id>\d+)/(?P<month>\d+)/(?P<year>\d+)/$' , manager_timesheet_page_view , name='managertimesheet' ) ,
-    url(r'^timesheetaction/(?P<employee_id>\d+)/(?P<project_id>\d+)/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/$' , time_sheet_action_page_view , name='timesheetaction' ) ,
-    url(r'^timesheetmanageraction/(?P<employee_id>\d+)/(?P<project_id>\d+)/(?P<manager_id>\d+)/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/$' , time_sheet_manager_action_page_view , name='timesheetmanageraction' ) ,
+    url(r'^timesheetaction/(?P<employee_id>\d+)/(?P<project_id>\d+)/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/(?P<period>\d+)/$' , time_sheet_action_page_view , name='timesheetaction' ) ,
+    url(r'^timesheetmanageraction/(?P<employee_id>\d+)/(?P<project_id>\d+)/(?P<manager_id>\d+)/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/(?P<period>\d+)/$' , time_sheet_manager_action_page_view , name='timesheetmanageraction' ) ,
 ] 

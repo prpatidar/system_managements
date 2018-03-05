@@ -51,6 +51,7 @@
  
 
 </script>
+{{project.payment_type}}
 <table width="90%"  border="1">
 <tr bgcolor=" #0088BA">
 <th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
@@ -64,29 +65,39 @@
            
            {% if i != 0  %} 
                {% if i in daylist %}
-             
+                 
+                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal">{{i}}</button><br>                 
                  {% for timesheet in timesheets %}
+
                   {% if timesheet.day == i %}
-                     {% if timesheet.status == "aprove" %}
-                     {{i}}<br>
-                     {%else%}
-                   <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal">{{i}}</button><br>
-                   {% endif%}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
-                   {% if timesheet.status == "aprove" %}
-                   <b>{{timesheet.status}}</b>
-                   {%endif %}
-                   {% if timesheet.status == "pending" %}
-                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
-                   {% endif %}
-                   {% if timesheet.status == "rejected" %}
-                   <b>{{timesheet.reject_comment}}</b>
-                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
-                   {% endif %}
-                  {% endif %}
+                   <b>{{timesheet.status}}</b><br>
+                   
+                                       
+                    {% if project.payment_type == "Daliy" and timesheet.status == "pending"  %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
+                    {% endif %}
+                    {% if project.payment_type == "Daliy" and timesheet.status == "rejected"  %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
+                     {% endif %}
+                    {% endif %}
                  {% endfor %}  
+                    
+                    {% if project.payment_type == "Weekly" %}
+                       {% if i == 7 or i == 14  or i == 21 or i == 28 %}
+                      <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=2  %}" >Submit </a> <br>
+                      {% endif %}
+                   {% endif %}
+                  
+                  
+
+                 {% if project.payment_type == "Monthly" and i == 1 %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=3 %}" >Submit </a> <br>
+                    {% endif %}
+
               {% endif %}
+
               {% if i not in daylist %}
               {{i}}
                <br>
@@ -94,19 +105,31 @@
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
-                    {% if timesheet.status == "submit" or timesheet.status == "aprove" %}
-                  <b>{{timesheet.status}}</b>
-                   {% endif%}
-                   {% if timesheet.status == "pending" %}
-                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
+                   
+                   <b>{{timesheet.status}}</b><br>
+                   
+                    
+                    {% if project.payment_type == "Daliy" and timesheet.status == "pending" %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
+                    {% endif %}
+                    {% if project.payment_type == "Daliy" and timesheet.status == "rejected"  %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
+                     {% endif %}
+                     {% endif %}
+                    {% endfor %} 
+
+                    {% if project.payment_type == "Weekly" %}
+                       {% if i == 7 or i == 14  or i == 21 or i == 28 %}
+                      <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=2 %}" >Submit </a> <br>
+                      {% endif %}
                    {% endif %}
-                   {% if timesheet.status == "rejected" %}
-                   <b>{{timesheet.reject_comment}}</b>
-                   <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  %}" >Submit </a> <br>
-                   {% endif %}
-                  {% endif %}
-                 {% endfor %}  
+                  
+                 {% if project.payment_type == "Monthly" and i == 1 %}
+                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=3 %}" >Submit </a> <br>
+                    {% endif %}
+ 
               {% endif %}
+
            {% endif %} 
          </td>
     {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 or forloop.counter == 35 %}
@@ -140,7 +163,7 @@
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
 
 {% csrf_token %}
-<select name="taskname">
+<select class="dropdown" name="taskname">
   {% for task in tasklist %}
    <option>{{task}}</option>
   {% endfor %}

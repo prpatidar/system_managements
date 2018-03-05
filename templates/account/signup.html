@@ -19,13 +19,13 @@
   
 <center><h1>{% trans "Sign Up" %}</h1></center>
 
-<p>{% blocktrans %}Already have an account? then <a class="buttonlink" href="{{ login_url }}">sign in</a>{% endblocktrans %}</p>
+
   {% csrf_token %}
   {{ form.as_p }}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button class="button button2" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <button class="button button2" type="submit">{% trans "Sign Up" %} &raquo;</button><a class="button button2" href="{{ login_url }}">sign in</a>
 </form>
 
 {% endblock %}
