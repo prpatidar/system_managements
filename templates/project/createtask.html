@@ -12,8 +12,8 @@
 <form class="form-signin" action="{% url 'createtask' project_id=project_id manager_id=manager_id  %}" method="post">
    <div class="logout">
 <a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div> 
-<h1> Create Task </h1><br><br>
+</div> <br>
+<h1> Create Task </h1>
 
     {% csrf_token %}
     {{ form.as_p }}

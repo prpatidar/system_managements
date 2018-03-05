@@ -1,6 +1,7 @@
 
 body {
-	background: #232627 !important;	
+  background-image:url('{{ STATIC_URL }}images/bgimage.jpeg');
+	/*background: #232627 !important;	*/
 }
 
 .wrapper {	
@@ -39,7 +40,7 @@ textarea {
   border: 5px solid #008CBA;  
   }
 .popup {
-  max-width: 9s0%;
+  max-width: 90%;
   padding: 15px 35px 45px ;
   margin: 100 auto;
   background-color: #fff;

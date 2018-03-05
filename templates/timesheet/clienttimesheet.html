@@ -20,7 +20,7 @@
 <h1> <font color="#0088BA">Time Sheet for Employee ID {{employeeid}}</font> </h1>
 
 <form action="{% url 'clienttimesheet' employeeid=employeeid project_id=project.id client_id=client_id month=month year=year %}" method="get">
- <font color="#0088BA"> Emp ID :</font><select class="stylesheet" name="employee_id" id="employee_id"> 
+ <font color="#0088BA"> Emp ID :</font><select class="dropdown" name="employee_id" id="employee_id"> 
       {% for employee in employees %}
             <option>{{employee}}</option>
       {% endfor %}
@@ -46,7 +46,7 @@
 <br>
 
 </script>
-<table width="90%"  border="1">
+<table width="90%"  border="1" >
 <tr bgcolor=" #0088BA">
 <th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
 </tr>
@@ -70,7 +70,30 @@
                 
                   {% if timesheet.day == i and timesheet.status == "aprove" %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
+                   
+                   {% if project.payment_type == "Daliy" and timesheet.payment == 0 %}
+                    <a class="button" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=1 %}" >Pay </a> 
+                  {% elif project.payment_type == "Daliy" %}
+                  <b> Paid &#8377; {{timesheet.payment}} </b>
+                    {% endif %}
+
+                    {% if project.payment_type == "Weekly" and timesheet.payment == 0 %}
+                       {% if i == 7 or i == 14  or i == 21 or i == 28 %}
+                      <a class="button" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
+                       {% endif %}
+                    {% elif project.payment_type == "Weekly" %}
+                      <b> Paid &#8377; {{timesheet.payment}} </b>
+                   {% endif %}
+                  
+                     {% if project.payment_type == "Monthly" and timesheet.payment == 0 %}
+                       {% if i == 1 %}
+                      <a class="button" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
+                       {% endif %}
+                    {% elif project.payment_type == "Monthly" %}
+                      <b> Paid &#8377; {{timesheet.payment}} </b>
+                   {% endif %}
+
                   {% endif %}
                 
                  {% endfor %}  

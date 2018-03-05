@@ -42,7 +42,7 @@
 			  <td><a href="{% url 'task' project_id=project.id manager_id=manager_id%}" > {{project.title}} </a> </td> 
 			  <td>{{project.discription}}</td>
 			  <td>{{project.status}}</td>
-			  <td>{{project.hourlyrate}}</td>
+			  <td>{{project.hourlyrate}} $/Hr.</td>
 			  <td ><a href="{% url 'deleteproject' project_id=project.id manager_id=manager_id%}">Delete Project</a></td>
 			  <td ><a href="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" >Time Sheet</a></td>
   		</tr>

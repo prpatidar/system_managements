@@ -180,8 +180,6 @@ class TimeSheetManagerActionPageView(View):
                 i = i+1
 
          t = TimeSheet.objects.all()
-         for t in t :
-            print t.status + " "
          return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id , 'month' : month, 'year': year}))
 
 
@@ -256,8 +254,6 @@ client_timesheet_page_view = ClientTimeSheetPageView.as_view()
 class ManagerTimeSheetPageView(View):
 
     def get(self, request, employeeid,  project_id,manager_id, month, year ):
-        # TimeSheet.objects.filter(day=26).delete()
-        # TimeSheet.objects.filter(day=28).delete()
         emp_id= request.GET.get('employee_id')
         if emp_id :
             employeeid=emp_id
@@ -316,3 +312,55 @@ class ManagerTimeSheetPageView(View):
 
 manager_timesheet_page_view = ManagerTimeSheetPageView.as_view()
 
+class ClientPaymentPageView(View):
+
+    def get(self, request, employee_id, project_id, client_id, day, month, year, period):
+         period = int(period)
+         day = int(day)
+         project = Project.objects.get(id= project_id)
+         if period == 1 :
+            try:
+                timesheet = TimeSheet.objects.get(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="aprove")
+                if timesheet : 
+                    timesheet.payment = timesheet.spendtime * project.hourlyrate 
+                    print timesheet.payment
+                    timesheet.save() 
+            except ObjectDoesNotExist :
+                print "nothing" 
+         if period == 2 :
+            i = day
+            payment = 0
+            while (i > day-7) :
+                try:
+                    timesheet = TimeSheet.objects.get(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="aprove")
+                    if timesheet :
+                        timesheet.payment = timesheet.spendtime * project.hourlyrate 
+                        payment = payment + timesheet.payment
+                        timesheet.save()
+                except ObjectDoesNotExist :
+                    print "nothing" 
+                i = i-1
+            print payment
+         if period == 3 :
+            i = 1
+            payment = 0
+            while i < 32 :
+                try:
+                    timesheet = TimeSheet.objects.get(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="aprove")
+                    if timesheet :
+                        timesheet.payment = timesheet.spendtime * project.hourlyrate 
+                        payment = payment + timesheet.payment
+                        timesheet.save()
+                except ObjectDoesNotExist :
+                    print "nothing" 
+                i = i+1
+            print payment
+         project.save()
+         # TimeSheet.objects.all().update(payment=0)
+         t = TimeSheet.objects.filter(employee_id=employee_id)
+         for t in t :
+            print t.status , t.reject_comment,t.month,t.year,t.day,project_id
+         return redirect(reverse('clienttimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'client_id' : client_id ,'month' : month, 'year': year}))
+
+    
+client_payment_page_view = ClientPaymentPageView.as_view()

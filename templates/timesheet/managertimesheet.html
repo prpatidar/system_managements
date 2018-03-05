@@ -33,7 +33,7 @@
 <h1> <font color="#0088BA">Time Sheet for Employee ID {{employeeid}}</font> </h1>
 
 <form action="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" method="get">
- <font color="#0088BA"> Emp ID :</font><select class="stylesheet" name="employee_id" id="employee_id"> 
+ <font color="#0088BA"> Emp ID :</font><select class="dropdown" name="employee_id" id="employee_id"> 
       {% for employee in employees %}
             <option>{{employee}}</option>
       {% endfor %}
@@ -80,29 +80,37 @@
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
-                   <b>{{timesheet.status}}</b>
-
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
+                   {% if timesheet.payment == 0 %}
+                     <b> Payment Pending </b>
+                   {% else %}
+                     <b> Paid &#8377; {{timesheet.payment}} </b>
+                   {% endif %}
                     {% if project.payment_type == "Daliy" and timesheet.status == "submit" %}
                     <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
                     <button data-id="{{i}}" data-id1="1" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
                     {% endif %}
-                  {% endif %}
-                 {% endfor %}  
-               {% endif %} 
 
-                    {% if project.payment_type == "Weekly" %}
+                    {% if project.payment_type == "Weekly" and timesheet.status == "submit"  %}
                        {% if i == 7 or i == 14  or i == 21 or i == 28 %}
                       <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=2 %}" >Aprove </a> 
                       <button data-id="{{i}}" data-id1="2" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
                       {% endif %}
                    {% endif %}
-                  
-                  
-                 {% if project.payment_type == "Monthly" and i == 1 %}
+
+                   {% if project.payment_type == "Monthly" and i == 1 and timesheet.status == "submit"   %}
                     <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=3 %}" >Aprove </a> 
                     <button data-id="{{i}}" data-id1="3" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
                    {% endif %} 
+
+                  {% endif %}
+                 {% endfor %}  
+               {% endif %} 
+
+                    
+                  
+                  
+                 
                  
          </td>
     {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 or forloop.counter == 35 %}

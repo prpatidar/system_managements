@@ -71,31 +71,34 @@
 
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
                    <b>{{timesheet.status}}</b><br>
                    
                                        
-                    {% if project.payment_type == "Daliy" and timesheet.status == "pending"  %}
-                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
-                    {% endif %}
-                    {% if project.payment_type == "Daliy" and timesheet.status == "rejected"  %}
-                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
-                     {% endif %}
-                    {% endif %}
-                 {% endfor %}  
+                    {% if project.payment_type == "Daliy" %}
+                       {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
+                        <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
+                      {% endif %}
+                    {% endif %} 
+                                      
                     
-                    {% if project.payment_type == "Weekly" %}
+                    {% if project.payment_type == "Weekly"  %}
+                      {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
                        {% if i == 7 or i == 14  or i == 21 or i == 28 %}
                       <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=2  %}" >Submit </a> <br>
                       {% endif %}
+                     {% endif %} 
                    {% endif %}
                   
                   
 
                  {% if project.payment_type == "Monthly" and i == 1 %}
+                   {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
                     <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=3 %}" >Submit </a> <br>
                     {% endif %}
-
+                   {% endif %} 
+                  {% endif %}
+                 {% endfor %}  
               {% endif %}
 
               {% if i not in daylist %}
@@ -104,30 +107,33 @@
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
-                   <font color="blue" >Time: </font>{{timesheet.spendtime}}<br>
+                   <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
                    
                    <b>{{timesheet.status}}</b><br>
                    
                     
-                    {% if project.payment_type == "Daliy" and timesheet.status == "pending" %}
-                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
-                    {% endif %}
-                    {% if project.payment_type == "Daliy" and timesheet.status == "rejected"  %}
-                    <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
-                     {% endif %}
-                     {% endif %}
-                    {% endfor %} 
-
-                    {% if project.payment_type == "Weekly" %}
-                       {% if i == 7 or i == 14  or i == 21 or i == 28 %}
-                      <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=2 %}" >Submit </a> <br>
+                    {% if project.payment_type == "Daliy" %}
+                       {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
+                        <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=1 %}" >Submit </a> <br>
                       {% endif %}
+                    {% endif %} 
+                      
+
+                    {% if project.payment_type == "Weekly"  %}
+                      {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
+                       {% if i == 7 or i == 14  or i == 21 or i == 28 %}
+                      <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=2  %}" >Submit </a> <br>
+                      {% endif %}
+                     {% endif %} 
                    {% endif %}
                   
-                 {% if project.payment_type == "Monthly" and i == 1 %}
+                {% if project.payment_type == "Monthly" and i == 1 %}
+                   {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
                     <a class="button button2" href="{% url 'timesheetaction' employee_id=employee_id project_id=project.id day=i month=month year=year  period=3 %}" >Submit </a> <br>
                     {% endif %}
- 
+                   {% endif %} 
+                  {% endif %}
+                 {% endfor %}  
               {% endif %}
 
            {% endif %} 
