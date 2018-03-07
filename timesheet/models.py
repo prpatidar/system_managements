@@ -14,3 +14,4 @@ class TimeSheet(models.Model):
     status = models.CharField(max_length=10, default="pending")
     reject_comment = models.TextField(max_length=150,blank=True,null=True)
     payment = models.IntegerField(default=0)
+    approvaldate = models.DateField(null=True, blank=True)

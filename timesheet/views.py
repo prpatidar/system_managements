@@ -1,5 +1,9 @@
 
-import calendar, datetime
+import stripe
+import smtplib
+import calendar ,datetime
+from datetime import  timedelta
+from smtplib import SMTPException
 from collections import OrderedDict
 
 from django import forms
@@ -11,6 +15,7 @@ from django.shortcuts import render , redirect
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
+from creditcard.models import Card
 from users.models import User
 from users.forms import EmployeeForm
 from timesheet.models import TimeSheet
@@ -18,10 +23,10 @@ from project.models import Project, Task
 from timesheet.forms import TimeSheetForm
 from project.forms import ProjectForm ,TaskForm
 
-
 class TimeSheetPageView(View):
 
     def get(self, request, employee_id, project_id, month,year):
+        # TimeSheet.objects.all().delete()
         response = {'employee_id': employee_id, 'month' : month , 'year' : year} 
         c=calendar.TextCalendar(calendar.MONDAY)
         days = []
@@ -56,7 +61,6 @@ class TimeSheetPageView(View):
                 totaldays -= 1
                 today += 1
         print daylist
-       #TimeSheet.objects.all().delete()
         response['daylist'] = daylist
         response['today'] = date.day
         response['currentyear'] = date.year
@@ -92,6 +96,8 @@ class TimeSheetFormPageView(View):
         if timesheet :
             timesheet.taskname=request.POST.get('taskname')
             timesheet.spendtime=request.POST.get('spendtime')
+            timesheet.status="pending"
+            timesheet.payment = 0
             timesheet.save()
         else :
             form=TimeSheetForm()
@@ -143,22 +149,58 @@ class TimeSheetManagerActionPageView(View):
     def get(self, request, employee_id, project_id, manager_id, day, month, year,period):
          period = int(period)
          day = int(day)
+         date = datetime.datetime.now().date()
          if period == 1 :
-            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+            TimeSheet.objects.filter(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="",approvaldate=date)
          if period == 2 :
             i = day
             while (i > day-8) :
-                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="",approvaldate=date)
                 i = i-1
          if period == '3' :
             i = day
             while i < 32 :
-                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="")
+                TimeSheet.objects.filter(month=month, day=i, employee_id=employee_id, project_id=project_id, year=year,status="submit").update(status="aprove",reject_comment="",approvaldate=date)
                 i = i+1
-        
-         t = TimeSheet.objects.filter(employee_id=employee_id)
+       
+         project = Project.objects.get(id= project_id)
+         stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
+         client_id = project.client_id
+         card = Card.objects.get(client_id=client_id,primary=True)
+         customer = User.objects.get(id=client_id)
+         try:
+            timesheets = TimeSheet.objects.filter(project_id=project_id,employee_id=employee_id,status="aprove",payment = 0)
+            for timesheet in timesheets:
+                pastdate = datetime.datetime.now().date()-datetime.timedelta(days=5)
+                if timesheet.approvaldate and timesheet.approvaldate < pastdate  : 
+                    print "hello"
+                    timesheet.payment = timesheet.spendtime * project.hourlyrate 
+                    stripecharge = stripe.Charge.create(
+                    amount = timesheet.payment+1000,
+                    currency="usd",
+                    customer = customer.stripetoken,
+                    source = card.card_token, # obtained with Stripe.js
+                    description="Project Payment"
+                    )
+                    timesheet.save()
+                    try:
+                        session = smtplib.SMTP('smtp.gmail.com',587)
+                        session.ehlo()
+                        session.starttls()
+                        session.ehlo()
+                        session.login('pradeeppatidar2018@gmail.com','ppatidar2018')
+                        session.sendmail('pradeeppatidar2018@gmail.com', customer.email, 'amount deducted from your account is :')         
+                        session.quit()
+                        print "Successfully sent email"
+                    except SMTPException:
+                        print "Error: unable to send email"
+                    
+         except ObjectDoesNotExist :
+            print "nothing" 
+         project.save()
+         t = TimeSheet.objects.filter(employee_id=employee_id,project_id=project_id)
          for t in t :
-            print t.status , t.reject_comment,t.month,t.year,t.day,project_id
+            print t.status , t.reject_comment,t.month,t.year,t.day,project_id,t.approvaldate
          return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id ,'month' : month, 'year': year}))
 
     def post(self, request, employee_id, project_id, manager_id, day, month, year,period):
@@ -318,12 +360,21 @@ class ClientPaymentPageView(View):
          period = int(period)
          day = int(day)
          project = Project.objects.get(id= project_id)
+         stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
+         card = Card.objects.get(client_id=client_id,primary=True)
+         customer = User.objects.get(id=client_id)
          if period == 1 :
             try:
                 timesheet = TimeSheet.objects.get(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year,status="aprove")
                 if timesheet : 
                     timesheet.payment = timesheet.spendtime * project.hourlyrate 
-                    print timesheet.payment
+                    stripecharge = stripe.Charge.create(
+                    amount = timesheet.payment+1000,
+                    currency="usd",
+                    customer = customer.stripetoken,
+                    source = card.card_token, # obtained with Stripe.js
+                    description="Project Payment"
+                     )
                     timesheet.save() 
             except ObjectDoesNotExist :
                 print "nothing" 
@@ -336,6 +387,13 @@ class ClientPaymentPageView(View):
                     if timesheet :
                         timesheet.payment = timesheet.spendtime * project.hourlyrate 
                         payment = payment + timesheet.payment
+                        stripecharge = stripe.Charge.create(
+                        amount = timesheet.payment+1000,
+                        currency="usd",
+                        customer = customer.stripetoken,
+                        source = card.card_token, # obtained with Stripe.js
+                        description="Project Payment"
+                         )
                         timesheet.save()
                 except ObjectDoesNotExist :
                     print "nothing" 
@@ -350,6 +408,13 @@ class ClientPaymentPageView(View):
                     if timesheet :
                         timesheet.payment = timesheet.spendtime * project.hourlyrate 
                         payment = payment + timesheet.payment
+                        stripecharge = stripe.Charge.create(
+                        amount = timesheet.payment+1000,
+                        currency="usd",
+                        customer = customer.stripetoken,
+                        source = card.card_token, # obtained with Stripe.js
+                        description="Project Payment"
+                        )
                         timesheet.save()
                 except ObjectDoesNotExist :
                     print "nothing" 

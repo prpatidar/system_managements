@@ -86,6 +86,7 @@
                    {% else %}
                      <b> Paid &#8377; {{timesheet.payment}} </b>
                    {% endif %}
+                   <br>
                     {% if project.payment_type == "Daliy" and timesheet.status == "submit" %}
                     <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
                     <button data-id="{{i}}" data-id1="1" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
@@ -123,15 +124,10 @@
 
 
 
-<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-       
-        <div class="modal-body">
-         
-<center>
+            <div class="modal-body"> 
+
 <div class="table-block" >
 
 <form  action="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day='1' month=month year=year period=0  %}" method="post">
@@ -143,16 +139,11 @@ Reason For Rejection
 <input type="hidden" name="period" id="period" />
 <br>
 <button class="button button2" type="submit" >Update </button>
- <button type="button" class="button button2" data-dismiss="modal"> Close </button>
+<button type="button" class="button button2" data-dismiss="modal"> Close </button>
 </form>
 </div>
-</center>
 
-        </div>
-        
-      </div>
-      
+
     </div>
   </div>
-  
 </div>

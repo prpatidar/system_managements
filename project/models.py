@@ -13,8 +13,8 @@ class Project(models.Model):
     enddate = models.DateField(null=True, blank=True) #auto_now_add=False,
     createdby = models.CharField(blank=True, max_length=2) #Need To Do
     client = models.ForeignKey(User, blank=True ) 
-    hourlyrate = models.IntegerField(blank=True)
-    payment_type = models.CharField(max_length=10, blank=True) 
+    hourlyrate = models.IntegerField(blank=True,null=True)
+    payment_type = models.CharField(max_length=10, blank=True,null=True) 
 
 class Task(models.Model):
     project= models.ForeignKey(Project, blank=True)

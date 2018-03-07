@@ -154,22 +154,14 @@
 
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          
-          <h4 class="modal-title">Fill The Working Hours</h4>
-          {{month}} {{year}}
-        </div>
-        <div class="modal-body">
+            <div class="modal-body">
          
 <center>
 
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
 
 {% csrf_token %}
-<select class="dropdown" name="taskname">
+<select class="stylesheet" name="taskname">
   {% for task in tasklist %}
    <option>{{task}}</option>
   {% endfor %}
@@ -185,10 +177,6 @@ Spend Time
 </center>
 
         </div>
-        
       </div>
-      
     </div>
-  </div>
   
-</div>

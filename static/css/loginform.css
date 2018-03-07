@@ -1,7 +1,7 @@
 
 body {
-  background-image:url('{{ STATIC_URL }}images/bgimage.jpeg');
-	/*background: #232627 !important;	*/
+  /*background-image:url('{{ STATIC_URL }}images/bgimage.jpeg');*/
+	background: #232627 !important;	
 }
 
 .wrapper {	
