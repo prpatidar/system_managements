@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'timesheet',
     'creditcard',
     'allauth',
+    'rest_framework',
     'allauth.account',
     'allauth.socialaccount',
 ]
