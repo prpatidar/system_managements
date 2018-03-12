@@ -5,6 +5,7 @@ from django.db import models
 from users.models import User
         
 
+# this model is used to deal with project related operations
 class Project(models.Model):
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
@@ -16,6 +17,7 @@ class Project(models.Model):
     hourlyrate = models.IntegerField(blank=True,null=True)
     payment_type = models.CharField(max_length=10, blank=True,null=True) 
 
+# this model is used to deal with task for a project 
 class Task(models.Model):
     project= models.ForeignKey(Project, blank=True)
     title = models.CharField(max_length=30)

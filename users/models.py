@@ -1,16 +1,12 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
-
-    use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
         if not email:
@@ -34,8 +30,9 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+# this is django's user model which is overrided to store more fileds for users
 class User(AbstractBaseUser, PermissionsMixin):
-
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,default=1)
     username =models.CharField(('username'),max_length=30)
     email = models.EmailField( ('email'), unique=True)
     first_name = models.CharField(('first_name'), max_length=30, blank=True)

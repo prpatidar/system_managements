@@ -5,7 +5,7 @@ from django.db import models
 from users.models import User
         
 
-
+# model to store credit card related informantion
 class Card(models.Model):
     card_number = models.CharField(max_length=20)
     cvv_number = models.CharField(max_length=3)

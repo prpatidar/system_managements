@@ -16,7 +16,7 @@ from creditcard.models import Card
 from creditcard.forms import CardForm
 
 
-
+# view to show all credit cards for client
 class CreditcardPageView(View) :
 
     def get(self, request, client_id):
@@ -24,10 +24,8 @@ class CreditcardPageView(View) :
         response['cards'] = Card.objects.filter(client_id=client_id)
         return render(request,'creditcard/creditcard.html', response )
 
-creditcard_page_view = CreditcardPageView.as_view()
-
  
-
+#view to create credit card for client
 class CreateCreditCardPageView(View):
     
     def get(self, request, client_id):
@@ -60,10 +58,8 @@ class CreateCreditCardPageView(View):
         else:
         	return render(request, 'creditcard/createcreditcard.html', response)
 
-create_creditcard_page_view = CreateCreditCardPageView.as_view()
 
-
-
+# view to delete credit card for client
 class DeleteCreditCardPageView(View):
 
     def get(self, request, client_id, card_id):
@@ -74,8 +70,8 @@ class DeleteCreditCardPageView(View):
         Card.objects.filter(id=card_id).delete()
         return redirect(reverse('creditcard' ,kwargs ={'client_id': client_id}))
 
-delete_creditcard_page_view = DeleteCreditCardPageView.as_view()
 
+#view  to make primary credit card
 class PrimaryCreditCardPageView(View):
 
     def get(self, request, client_id, card_id):

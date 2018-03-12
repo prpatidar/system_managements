@@ -4,7 +4,7 @@ from django.forms import ModelForm
 
 from users.models import User 
 
-
+# form to create a employee under login manager
 class EmployeeForm(ModelForm):
 
      class Meta:

@@ -23,10 +23,10 @@ from project.models import Project, Task
 from timesheet.forms import TimeSheetForm
 from project.forms import ProjectForm ,TaskForm
 
+#this a timesheet view for employees
 class TimeSheetPageView(View):
 
     def get(self, request, employee_id, project_id, month,year):
-        # TimeSheet.objects.all().delete()
         response = {'employee_id': employee_id, 'month' : month , 'year' : year} 
         c=calendar.TextCalendar(calendar.MONDAY)
         days = []
@@ -78,10 +78,7 @@ class TimeSheetPageView(View):
         response['tasklist'] = tasklist
         return render(request,'timesheet/timesheet.html', response )
              
-
-timesheet_page_view = TimeSheetPageView.as_view()
-
-
+#this a timesheet filling view for the employees
 class TimeSheetFormPageView(View):
     
     def post(self, request, employee_id, project_id, day, month, year):
@@ -113,8 +110,7 @@ class TimeSheetFormPageView(View):
 
         return redirect(reverse('timesheet' ,kwargs ={'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year}))
 
-time_sheet_form_page_view = TimeSheetFormPageView.as_view()
-
+#this view is for employee action on their timesheet
 class TimeSheetActionPageView(View):
 
     def get(self, request, employee_id, project_id, day, month, year , period):
@@ -141,9 +137,8 @@ class TimeSheetActionPageView(View):
             print t.status , t.reject_comment,t.month,t.year,t.day
          return redirect(reverse('timesheet' ,kwargs ={'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year}))
     
-time_sheet_action_page_view = TimeSheetActionPageView.as_view()
 
-
+#this a timesheet view for manager action on employees timesheet
 class TimeSheetManagerActionPageView(View):
 
     def get(self, request, employee_id, project_id, manager_id, day, month, year,period):
@@ -225,11 +220,7 @@ class TimeSheetManagerActionPageView(View):
          return redirect(reverse('managertimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'manager_id' :manager_id , 'month' : month, 'year': year}))
 
 
-
-time_sheet_manager_action_page_view = TimeSheetManagerActionPageView.as_view()
-
-
-
+#this a completed timesheet view for clients 
 class ClientTimeSheetPageView(View):
 
     def get(self, request, employeeid, client_id, project_id, month,year):
@@ -290,9 +281,8 @@ class ClientTimeSheetPageView(View):
         return render(request,'timesheet/clienttimesheet.html', response )
              
 
-client_timesheet_page_view = ClientTimeSheetPageView.as_view()
 
-
+#this a timesheet view for manager which is filled by employees
 class ManagerTimeSheetPageView(View):
 
     def get(self, request, employeeid,  project_id,manager_id, month, year ):
@@ -351,9 +341,7 @@ class ManagerTimeSheetPageView(View):
         response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
         return render(request,'timesheet/managertimesheet.html', response )
              
-
-manager_timesheet_page_view = ManagerTimeSheetPageView.as_view()
-
+#this a timesheet view for payment by client on aproved timesheets
 class ClientPaymentPageView(View):
 
     def get(self, request, employee_id, project_id, client_id, day, month, year, period):
@@ -428,4 +416,3 @@ class ClientPaymentPageView(View):
          return redirect(reverse('clienttimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'client_id' : client_id ,'month' : month, 'year': year}))
 
     
-client_payment_page_view = ClientPaymentPageView.as_view()

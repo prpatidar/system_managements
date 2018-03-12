@@ -3,17 +3,17 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.conf.urls import include
 
-from project.api.views import all_projects_page_view , project_page_view , all_tasks_page_view , employee_project_page_view, employee_projects_page_view ,tasks_page_view, task_page_view
+from project.api import views
 
 urlpatterns = [
     
-    url(r'^projects/$', all_projects_page_view ),
-    url(r'^projects/(?P<project_id>\d+)/$', project_page_view ),
-    url(r'^projects/(?P<project_id>\d+)/tasks/$', tasks_page_view ),
-    url(r'^projects/(?P<project_id>\d+)/tasks/(?P<task_id>\d+)/$', task_page_view ),
-    url(r'^projects/tasks/$', all_tasks_page_view ),
-    url(r'^employees/(?P<employee_id>\d+)/projects/$', employee_projects_page_view ),
-    url(r'^employees/(?P<employee_id>\d+)/projects/(?P<project_id>\d+)/$', employee_project_page_view ),
+    url(r'^projects/$', views.AllProjectsView.as_view() ),
+    url(r'^projects/(?P<project_id>\d+)/$', views.ProjectView.as_view() ),
+    url(r'^projects/(?P<project_id>\d+)/tasks/$', views.TasksView.as_view() ),
+    url(r'^projects/(?P<project_id>\d+)/tasks/(?P<task_id>\d+)/$', views.TaskView.as_view() ),
+    url(r'^projects/tasks/$', views.AllTasksView.as_view() ),
+    url(r'^employees/(?P<employee_id>\d+)/projects/$', views.EmployeeProjectsView.as_view() ),
+    url(r'^employees/(?P<employee_id>\d+)/projects/(?P<project_id>\d+)/$', views.EmployeeProjectView.as_view() ),
     
     
     

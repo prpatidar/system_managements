@@ -17,7 +17,7 @@ from timesheet.models import TimeSheet
 from timesheet.forms import TimeSheetForm
 from project.forms import ProjectForm ,TaskForm
 
-
+#Task list view for employees
 class EmployeeTaskPageView(View):
 
     def get(self, request, project_id, employee_id):
@@ -25,8 +25,8 @@ class EmployeeTaskPageView(View):
         response['tasks'] = Task.objects.filter(project_id=project_id, employee_id=employee_id)
         return render(request, 'project/employeetask.html', response)
 
-employee_task_page_view = EmployeeTaskPageView.as_view()
 
+#this a project list view for employees
 class EmployeeProjectPageView(View):
 
     def get(self, request, employee_id):
@@ -38,8 +38,8 @@ class EmployeeProjectPageView(View):
         response['projects'] = Project.objects.filter(pk__in=project_ids)
         return render(request, 'project/employeeprojects.html', response)
 
-employee_project_page_view = EmployeeProjectPageView.as_view()
 
+#this a project list view for client
 class ClientProjectPageView(View):
 
     def get(self, request, client_id):
@@ -50,8 +50,8 @@ class ClientProjectPageView(View):
         response['projects'] = Project.objects.filter(client_id=client_id)
         return render(request, 'project/clientprojects.html', response)
 
-client_project_page_view = ClientProjectPageView.as_view()
 
+# project list view for manager
 class ProjectPageView(View):
 
     def get(self, request, manager_id):
@@ -62,9 +62,8 @@ class ProjectPageView(View):
         response['projects'] = Project.objects.filter(createdby=manager_id)
         return render(request, 'project/project.html', response)
 
-project_page_view = ProjectPageView.as_view()
 
-
+# view to delete a project by manager 
 class DeleteProjectPageView(View):
 
     def get(self, request, project_id, manager_id):
@@ -72,8 +71,8 @@ class DeleteProjectPageView(View):
         Task.objects.filter(project_id=project_id).delete()
         return redirect(reverse('project' ,kwargs ={'manager_id': manager_id}))
 
-delete_project_page_view = DeleteProjectPageView.as_view()
 
+#view is used to update task progress 
 class UpdateTaskPageView(View):
 
     def get(self, request, task_id):
@@ -92,8 +91,8 @@ class UpdateTaskPageView(View):
         task.save()
         return redirect(reverse('home'))
 
-update_task_page_view = UpdateTaskPageView.as_view()
 
+# view to update hourlyrate and payment type for project by client
 class ProjectFormPageView(View):
 
     def post(self, request):
@@ -109,8 +108,8 @@ class ProjectFormPageView(View):
         project.save()
         return redirect(reverse('home'))
 
-project_form_page_view = ProjectFormPageView.as_view()
 
+#view to update the task starting and end dates
 class UpdateDatePageView(View):
 
     def get(self, request, task_id):
@@ -128,9 +127,8 @@ class UpdateDatePageView(View):
         task.save()
         return redirect(reverse('home'))
 
-update_date_page_view = UpdateDatePageView.as_view()
 
-
+# task view for manager
 class TaskPageView(View):
     
     def get(self, request, project_id, manager_id):
@@ -138,9 +136,8 @@ class TaskPageView(View):
         response['tasks'] = Task.objects.filter(project_id = project_id)
         return render(request,'project/task.html', response)
 
-task_page_view = TaskPageView.as_view()
  
-
+# create project view for manager
 class CreateProjectPageView(View):
     
     def get(self, request, manager_id):
@@ -163,8 +160,8 @@ class CreateProjectPageView(View):
         else:
             return render(request, 'project/createproject.html', response)
 
-create_project_page_view = CreateProjectPageView.as_view()
 
+#create task view for manager
 class CreateTaskPageView(View):
    
     def get(self, request, project_id, manager_id):
@@ -187,4 +184,3 @@ class CreateTaskPageView(View):
             print form.errors
             return render(request, 'project/createtask.html', response )
 
-create_task_page_view = CreateTaskPageView.as_view()

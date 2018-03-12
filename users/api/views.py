@@ -1,38 +1,43 @@
-from users.models import User
-from rest_framework import viewsets
-from users.api.serializers import UserSerializer
-from rest_framework import generics
+from rest_framework import generics ,viewsets
 from rest_framework.response import Response
 
+from users.models import User
+from users.api.serializers import UserSerializer
+from users.api.permissions import IsOwnerOrReadOnly
 
 
-class AllManagersView(generics.ListCreateAPIView):
+class UserMixin(object):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def pre_save(self,obj):
+        obj.owner = self.request.user
+
+# view for allmanagers in application
+class AllManagersView(UserMixin,generics.ListCreateAPIView):
     
     queryset = User.objects.filter(role="manager")
     serializer_class = UserSerializer
 
     def list(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
-managers_page_view = AllManagersView.as_view()
-
-class AllEmployeesView(generics.ListCreateAPIView):
+# view for all employees
+class AllEmployeesView(UserMixin,generics.ListCreateAPIView):
     
     queryset = User.objects.filter(role="employee")
     serializer_class = UserSerializer
 
     def get(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
-all_employees_page_view = AllEmployeesView.as_view()
-
-class AllClientsView(generics.ListCreateAPIView):
+# view to list all clients
+class AllClientsView(UserMixin,generics.ListCreateAPIView):
     
     queryset = User.objects.filter(role="client")
     serializer_class = UserSerializer
@@ -42,31 +47,24 @@ class AllClientsView(generics.ListCreateAPIView):
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
-clients_page_view = AllClientsView.as_view()
-
-
-class EmployeeView(generics.ListCreateAPIView):
+# view to list a particular employee by its id
+class EmployeeView(UserMixin,generics.ListCreateAPIView):
     
     queryset = User.objects.filter(role="employee")
     serializer_class = UserSerializer
 
     def get(self, request,employee_id):
-        # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = User.objects.filter(role="employee",id=employee_id)
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
-employee_page_view = EmployeeView.as_view()
-
-class ClientView(generics.ListCreateAPIView):
+# view to list particular client by its unique id
+class ClientView(UserMixin,generics.ListCreateAPIView):
     
     queryset = User.objects.filter(role="client")
     serializer_class = UserSerializer
 
     def get(self, request,client_id):
-        # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = User.objects.filter(role="client",id=client_id)
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
-
-client_page_view = ClientView.as_view()

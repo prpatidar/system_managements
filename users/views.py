@@ -19,26 +19,23 @@ from timesheet.forms import TimeSheetForm
 from project.forms import ProjectForm ,TaskForm
 
 
-
+# this class is used to render index page
 class IndexPageView(View):
 
     def get(self, request):
         response = {}
         return render(request,'index1.html', response)
   
-index_page_view = IndexPageView.as_view()
 
-
+# this class is used to render on home page for all users
 class HomePageView(View) :
 
     def get(self, request):
         response = {}
         return render(request,'users/home.html', response )
-   
-
-home_page_view = HomePageView.as_view()
 
 
+# this class is used to render on all employee list under a login manager
 class EmployeePageView(View) :
 
     def get(self, request, manager_id):
@@ -47,8 +44,8 @@ class EmployeePageView(View) :
         response['users'] = User.objects.filter(role='employee',createdby=manager_id)
         return render(request,'users/employee.html', response )
 
-employee_page_view = EmployeePageView.as_view()
 
+# this class is used to render on all client list under a login manager
 class ClientPageView(View) :
 
     def get(self, request, manager_id):
@@ -56,19 +53,16 @@ class ClientPageView(View) :
         response['users'] = User.objects.filter(role='client',createdby=manager_id)
         return render(request,'users/client.html', response )
 
-client_page_view = ClientPageView.as_view()
 
-
+# this class is used to delete users profile (non-client)
 class DeleteProfilePageView(View):
 
     def get(self, request, employee_id, manager_id):
         User.objects.filter(id=employee_id).delete()
         return redirect(reverse('employee' ,kwargs ={'manager_id': manager_id}))
 
-delete_profile_page_view = DeleteProfilePageView.as_view()
 
-
-
+# this class is used to delete a client profile as well as thier stripe profile 
 class DeleteClientPageView(View):
 
     def get(self, request, employee_id, manager_id):
@@ -80,9 +74,8 @@ class DeleteClientPageView(View):
         User.objects.filter(id=employee_id).delete()
         return redirect(reverse('client' ,kwargs ={'manager_id': manager_id}))
 
-delete_client_page_view = DeleteClientPageView.as_view()
 
-
+# this class is used to create a employee under login manager
 class CreateEmployeePageView(View):
 
     def get(self, request, manager_id):
@@ -103,9 +96,8 @@ class CreateEmployeePageView(View):
             response = {'form':form,'manager_id':manager_id}
             return render(request,'users/createemployee.html', response)
 
-create_employee_page_view = CreateEmployeePageView.as_view()
 
-
+# this class is used to create client under a login manager
 class CreateClientPageView(View):
 
     def get(self, request, manager_id):
@@ -130,9 +122,8 @@ class CreateClientPageView(View):
             response = {'form':form,'manager_id':manager_id}
             return render(request,'users/createclient.html', response)
 
-create_client_page_view = CreateClientPageView.as_view()
 
-
+# this class is used to update user profile
 class UpdateProfilePageView(View):
 
     def get(self, request, employee_id):
@@ -155,5 +146,3 @@ class UpdateProfilePageView(View):
                 user.username=employee.cleaned_data['username']
         user.save()
         return redirect(reverse('home'))
-
-update_profile_page_view = UpdateProfilePageView.as_view()
