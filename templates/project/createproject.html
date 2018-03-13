@@ -12,7 +12,9 @@
   <div class="logout">
 <a class="buttonlink" href="{% url 'home' %}">Home </a>
 </div><br>
+
 <h1> Create Project </h1>
+{% if clients %}
     {% csrf_token %}
     {{ form.as_p }}
     <button class="button button2" type="submit" >Create Project </button>
@@ -20,7 +22,9 @@
     	{% for client in clients %}
             <option value="{{client.id}}">{{client.id}}</option>
     	{% endfor %}
-    	
+  {% else %}
+<b> No any Client  to Assign Project </b>
+{% endif %}  	
 
 </form>
 </center>

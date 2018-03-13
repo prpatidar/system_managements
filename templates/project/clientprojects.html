@@ -65,21 +65,13 @@ $(document).ready(function(){
 
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          
-         <center> <h4 class="modal-title">Update Project Details</h4>
-          </center>
-        </div>
-        <div class="modal-body">
+            <div class="modal-body">
          
 <center>
  <div class="popup">
 <form action="{% url 'projectform' %}" method="post">
 {% csrf_token %}
- <b> Payment Type</b> <br><br>
+ <b><font width="100%"> Payment Type </font></b> <br><br>
  <input type="radio" name="payment_type" value="Daliy" checked> Daliy  
   <input type="radio" name="payment_type" value="Weekly" > Weekly
   <input type="radio" name="payment_type" value="Biweekly"> Biweekly
@@ -90,22 +82,18 @@ $(document).ready(function(){
  
 
 
-</div>
-</center>
-
-        </div>
-        <div class="modal-footer">
+       
+        
             <button class="button button2" type="submit" >Update </button>
+            <button type="button" class="button button2" data-dismiss="modal">Close</button>
+          
             </form>
-          <button type="button" class="button button2" data-dismiss="modal">Close</button>
+          </center>
+           </div>
         </div>
       </div>
-      
     </div>
-  </div>
   
-</div>
-
 <script type="text/javascript">
  $(document).on("click", ".update_button", function () {
     console.log("hello popup")

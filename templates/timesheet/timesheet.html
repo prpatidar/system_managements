@@ -157,7 +157,7 @@
             <div class="modal-body">
          
 <center>
-
+{% if tasklist%}
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
 
 {% csrf_token %}
@@ -171,6 +171,9 @@ Spend Time
 <input type="hidden" name="day" id="day" />
 <br>
 <button class="button button2" type="submit" >Update </button>
+{% else %}
+<b> No any task to Fill Timesheet </b>
+{% endif %}
 <button type="button" class="button button2" data-dismiss="modal">Close</button>
 
 </form>

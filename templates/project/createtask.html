@@ -14,15 +14,18 @@
 <a class="buttonlink" href="{% url 'home' %}">Home </a>
 </div> <br>
 <h1> Create Task </h1>
-
+{% if employees %}
     {% csrf_token %}
     {{ form.as_p }}
      Emp ID :<select name="employee_id"> 
     	{% for employee in employees %}
             <option>{{employee.id}}</option>
     	{% endfor %}
- 
-    </select>
+             </select>
 <button class="button button2" type="submit" >Create Task </button>
+{% else %}
+<b> No any Emplopyee  to Assign Project Task </b>
+{% endif %}  	
+
 </form>
 </center>

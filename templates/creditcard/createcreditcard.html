@@ -3,6 +3,35 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
+<script type="text/javascript">
+	
+function validateForm()
+{
+
+var expDate=document.getElementById("expDate").value;
+// var cardNumber=document.getElementById("card_number").value;
+// alert(cardNumber)
+            var today = new Date();           
+
+            var formattedtoday = today.getFullYear() + '-' + (today.getMonth()) + '-' + today.getDate();
+            
+            alert(formattedtoday);
+
+        if (formattedtoday < expDate ){
+            alert("The expiry date is before today's date. Please select a valid expiry date");
+            document.getElementById("expDate").value = ''
+            return false;
+            }
+        // if (cardNumber.value.length<16  || isNaN(cardNumber.value)){
+        //     alert("Please enter 16 numbers for your credit card");
+        //     cardNumber.focus();
+        //     return false;
+        //     }
+ alert("Thank you for your submission");
+ return true;
+}
+
+</script>
 </head>
 
 <center>
@@ -15,8 +44,8 @@
 <h1> Create Credit Card </h1>
     {% csrf_token %}
     {{ form.as_p }}
-    End Date<input type="date" name="expirydate"><br>
-    <button class="button button2" type="submit" >Create </button>
+    End Date<input type="date" id="expDate" name="expirydate"><br>
+    <button class="button button2" type="submit" onclick="return validateForm();"  >Create </button>
      	
 
 </form>

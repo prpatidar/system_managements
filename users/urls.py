@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^updateprofile/(?P<employee_id>\d+)/$' ,views.UpdateProfilePageView.as_view()  , name='updateprofile' ) ,
     url(r'^createemployee/(?P<manager_id>\d+)/$' ,views.CreateEmployeePageView.as_view()  , name='createemployee' ) ,
     url(r'^deleteprofile/(?P<employee_id>\d+)/(?P<manager_id>\d+)/$' ,views.DeleteProfilePageView.as_view()  , name='deleteprofile' ) ,
+    url(r'^deleteclient/(?P<employee_id>\d+)/(?P<manager_id>\d+)/$' ,views.DeleteClientPageView.as_view()  , name='deleteclient' ) ,
     
 ]

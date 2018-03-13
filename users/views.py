@@ -71,6 +71,7 @@ class DeleteClientPageView(View):
         cu = stripe.Customer.retrieve(user.stripetoken)
         print user.stripetoken
         cu.delete()
+        user.save()
         User.objects.filter(id=employee_id).delete()
         return redirect(reverse('client' ,kwargs ={'manager_id': manager_id}))
 
