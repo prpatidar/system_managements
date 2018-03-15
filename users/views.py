@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.shortcuts import render , redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 from users.models import User
 from users.forms import EmployeeForm
@@ -28,11 +29,10 @@ class IndexPageView(View):
   
 
 # this class is used to render on home page for all users
-class HomePageView(View) :
-
-    def get(self, request):
-        response = {}
-        return render(request,'users/home.html', response )
+@login_required
+def HomePageView(request) :
+    response = {}
+    return render(request,'users/home.html', response )
 
 
 # this class is used to render on all employee list under a login manager
@@ -128,7 +128,8 @@ class CreateClientPageView(View):
 class UpdateProfilePageView(View):
 
     def get(self, request, employee_id):
-        form = EmployeeForm()
+        data = User.objects.get(id=employee_id)
+        form = EmployeeForm(instance=data)
         form.fields['role'].widget = forms.HiddenInput()
         response = {'form':form,'employee_id':employee_id}
         return render(request,'users/updateprofile.html' , response)

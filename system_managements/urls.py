@@ -10,7 +10,7 @@ from users.views import IndexPageView
 
 
 urlpatterns = [
-	url(r'^api/', include('users.api.urls')),
+	url(r'^api/user/', include('users.api.urls')),
 	url(r'^api/', include('project.api.urls')),
     url(r'^api/', include('timesheet.api.urls')),
     url(r'^api/', include('creditcard.api.urls')),

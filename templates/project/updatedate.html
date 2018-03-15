@@ -23,8 +23,8 @@
 	<h2>Task ID: {{task_id}}</h2>
  
 	{% csrf_token %}
-	 Start Date<input type="date" data-date-format="yyyy-MM-dd" name="startdate"><br>
-	 End Date<input type="date" name="enddate"><br>
+	 Start Date<input type="date" data-date-format="yyyy-MM-dd" name="startdate" value = "{{ data.startdate }}"><br>
+	 End Date<input type="date" name="enddate" value = "{{ data.enddate }}"><br>
 	<button class="button button2" type="submit" >Update Dates</button>
 </form>	 
 </center>

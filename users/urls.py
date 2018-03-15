@@ -8,7 +8,7 @@ from users import views
 
 urlpatterns = [
     
-    url(r'^home',views.HomePageView.as_view() ,name='home'),
+    url(r'^home',views.HomePageView ,name='home'),
     url(r'^client/(?P<manager_id>\d+)/$' ,views.ClientPageView.as_view()  , name='client' ) ,
     url(r'^employee/(?P<manager_id>\d+)/$' ,views.EmployeePageView.as_view()  , name='employee' ) ,
     url(r'^createclient/(?P<manager_id>\d+)/$' ,views.CreateClientPageView.as_view()  , name='createclient' ) ,

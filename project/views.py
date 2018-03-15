@@ -77,6 +77,9 @@ class UpdateTaskPageView(View):
 
     def get(self, request, task_id):
         response = {'task_id':task_id}
+        data = Task.objects.get(id=task_id)
+        response['data']= data
+        data.save()
         return render(request,'project/updatetask.html' , response)
 
     def post(self, request, task_id):
@@ -114,6 +117,9 @@ class UpdateDatePageView(View):
 
     def get(self, request, task_id):
         response = {'task_id':task_id}
+        data = Task.objects.get(id=task_id)
+        response['data']= data
+        data.save()
         return render(request, 'project/updatedate.html' , response)
 
     def post(self, request, task_id):

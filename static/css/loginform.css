@@ -158,7 +158,9 @@ a.calendar-link:hover, a.calendar-link:active {
 	  margin-bottom: 30px;
 	}
 
-  
+input[type="text"].focus {
+border: 1px solid blue;
+}  
 
 	.checkbox {
 	  font-weight: normal;
@@ -181,6 +183,7 @@ a.calendar-link:hover, a.calendar-link:active {
 	  border-bottom-left-radius: 0;
 	  border-bottom-right-radius: 0;
 	}
+
 
 	input[type="password"] {
 	  margin-bottom: 20px;
