@@ -8,6 +8,7 @@ from project.api import views
 urlpatterns = [
     
     url(r'^projects/$', views.AllProjectsView.as_view() ),
+    url(r'^createproject/$', views.CreateProjectApiView.as_view() ),
     url(r'^projects/(?P<project_id>\d+)/$', views.ProjectView.as_view() ),
     url(r'^projects/(?P<project_id>\d+)/tasks/$', views.TasksView.as_view() ),
     url(r'^projects/(?P<project_id>\d+)/tasks/(?P<task_id>\d+)/$', views.TaskView.as_view() ),

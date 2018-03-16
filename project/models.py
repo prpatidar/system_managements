@@ -12,7 +12,7 @@ class Project(models.Model):
     status = models.CharField(max_length=30, default="Pending", blank=True)
     startdate = models.DateField(null=True, blank=True)
     enddate = models.DateField(null=True, blank=True) #auto_now_add=False,
-    createdby = models.CharField(blank=True, max_length=2) #Need To Do
+    createdby = models.CharField(blank=True,max_length=100) #Need To Do
     client = models.ForeignKey(User, blank=True ) 
     hourlyrate = models.IntegerField(blank=True,null=True)
     payment_type = models.CharField(max_length=10, blank=True,null=True) 
