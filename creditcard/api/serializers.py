@@ -6,3 +6,9 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         fields = '__all__'
+
+class CreateCreditCardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Card
+        fields = ('card_number','cvv_number','expirydate','client')

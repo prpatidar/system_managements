@@ -27,3 +27,12 @@ class CreateProjectSerializer(serializers.ModelSerializer):
 
     # def create(self, validated_data):
     #     return Project.objects.create(**validated_data)
+
+
+class EditProjectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ( 'title','discription','startdate', 'enddate' )
+
+ 

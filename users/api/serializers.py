@@ -4,10 +4,29 @@ from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-
+    
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password')
+        fields = ('id','first_name', 'last_name', 'email', 'password')
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ('id','username','first_name', 'last_name', 'email', 'password','role','createdby')
+
+class ClientSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ('id','username','first_name', 'last_name', 'email', 'password','role','createdby','stripetoken')
+
+
+class EditEmployeeSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ('username','first_name', 'last_name', 'password',)
 
 class LoginSerializer(serializers.ModelSerializer):
     

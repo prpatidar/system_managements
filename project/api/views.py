@@ -5,10 +5,10 @@ from rest_framework import status
 
 from users.models import User
 from project.models import Project ,Task
-from project.api.serializers import  ProjectSerializer ,TaskSerializer ,CreateProjectSerializer
+from project.api.serializers import  ProjectSerializer ,TaskSerializer ,CreateProjectSerializer ,EditProjectSerializer
 
 # view to list all projjects
-class AllProjectsView(generics.ListCreateAPIView):
+class AllProjectsView(generics.ListAPIView):
     
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -20,7 +20,7 @@ class AllProjectsView(generics.ListCreateAPIView):
 
 
 # view to list all tasks 
-class AllTasksView(generics.ListCreateAPIView):
+class AllTasksView(generics.ListAPIView):
     
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -33,7 +33,7 @@ class AllTasksView(generics.ListCreateAPIView):
 
 
 # view to list a project by project id
-class ProjectView(generics.ListCreateAPIView):
+class ProjectView(generics.ListAPIView):
     
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -45,7 +45,7 @@ class ProjectView(generics.ListCreateAPIView):
 
 
 # view to list project for employee
-class EmployeeProjectsView(generics.ListCreateAPIView):
+class EmployeeProjectsView(generics.ListAPIView):
     
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -58,7 +58,7 @@ class EmployeeProjectsView(generics.ListCreateAPIView):
 
 
 # view to list a project by project id for employee by employee id
-class EmployeeProjectView(generics.ListCreateAPIView):
+class EmployeeProjectView(generics.ListAPIView):
     
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -71,7 +71,7 @@ class EmployeeProjectView(generics.ListCreateAPIView):
 
 
 # view to list tasks for a project by project id
-class TasksView(generics.ListCreateAPIView):
+class TasksView(generics.ListAPIView):
     
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -83,7 +83,7 @@ class TasksView(generics.ListCreateAPIView):
 
 
 # view to list a task by task id for employees
-class TaskView(generics.ListCreateAPIView):
+class TaskView(generics.ListAPIView):
     
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -118,4 +118,72 @@ class CreateProjectApiView(generics.CreateAPIView):
             print e
             return Response(data, status=status.HTTP_200_OK)
         
+   
+# view to list all projjects
+class EditProjectsApiView(generics.ListAPIView):
+    
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def get(self, request):
+        user = User.objects.get(email=request.user)
+        queryset = Project.objects.filter(createdby= user.id)
+        serializer = ProjectSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class EditProjectApiView(generics.CreateAPIView):
+    
+    queryset = Project.objects.all()
+    serializer_class = EditProjectSerializer
+
+    def get(self, request, project_id):
+        user = User.objects.get(email=request.user)
+        queryset = Project.objects.filter(createdby= user.id,id=project_id)
+        serializer = EditProjectSerializer(queryset, many=True)
+        return Response(serializer.data)
+   
+    def put(self,request, project_id):
+        data=request.data
+        # import pdb; pdb.set_trace()
+        try:
+            user = User.objects.get(email=request.user)
+            project = Project.objects.get(id=project_id)
+            if data['title']:
+                project.title = data['title']
+            if data['discription']:
+                project.discription = data['discription']
+            if data['startdate']:
+                project.startdate = data['startdate']
+            if data['enddate']:
+                project.enddate = data['enddate']
+            project.save()
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'Can Not Update Project'}, status=status.HTTP_404_NOT_FOUND)
+
+class DeleteProjectsApiView(generics.ListAPIView):
+    
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def get(self, request):
+        user = User.objects.get(email=request.user)
+        queryset = Project.objects.filter(createdby= user.id)
+        serializer = ProjectSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class DeleteProjectApiView(generics.ListAPIView):
+    
+    queryset = Project.objects.all()
+    serializer_class = EditProjectSerializer
+
+    def get(self, request, project_id):
+        user = User.objects.get(email=request.user)
+        Task.objects.filter(project_id=project_id).delete()
+        queryset = Project.objects.filter(createdby= user.id,id=project_id).delete()
+        serializer = EditProjectSerializer(queryset, many=True)
+        return Response({'status': True, 'message': 'Project and its Tasks  Deleted Successfully'}, status=status.HTTP_200_OK)
+
 
