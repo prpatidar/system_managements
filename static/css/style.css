@@ -1,7 +1,8 @@
-
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 body {
   /*background-image:url('{{ STATIC_URL }}images/bgimage.jpeg');*/
-	background: #232627 !important;	
+	background: #F5F5F5 !important;	
+  background-image:url('{{ STATIC_URL }}images/img3.jpg');
 }
 
 .wrapper {	
@@ -12,12 +13,14 @@ h1 {
 	color : #0088BA;
 }
 a {
-  color: black;
+  color: #0088BA;
 }
 a:hover {
-  color: blue;
+  color: green;
 }
-
+.navbar-inverse ,.navbar-brand {
+    color: black;
+}
 .logout {
  text-align:right;
  float:right;
@@ -26,28 +29,32 @@ textarea {
     width: 100%;
     height: 80px;
     padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
+    box-sizing: border-box;
 }
+
 .table-block {
-  max-width: 90%;
+  max-width: 100%;
   padding: 15px 35px 45px ;
-  margin: 100 auto;
-  background-color: #fff;
-  border: 5px solid #008CBA;  
+  margin: 0 auto;
+  background-color: #F5F5F5 !important;
+  /*border: 5px solid #008CBA;  */
   }
 .popup {
   max-width: 90%;
   padding: 15px 35px 45px ;
   margin: 100 auto;
-  background-color: #fff;
+  background-color: ;
   border: 5px solid #008CBA;  
   margin-bottom: 30px;
   }
-
+.navbar-inverse {
+    background-color: #0088BA;
+  
+}
 input[type=text], input[type=email] ,input[type=date] ,input[type="password"] {
     width: 100%;
     padding: 12px 20px;
@@ -94,7 +101,7 @@ a.buttonlink:hover, a.buttonlink:active {
 a.calendar-link:link, a.calendar-link:visited {
     background-color: white;
     color: black;
-    border: 2px solid 0088BA ;
+    border: 2px solid #0088BA ;
     border-radius: 30px;
     padding: 5px 5px;
     text-align: center;
@@ -107,7 +114,23 @@ a.calendar-link:hover, a.calendar-link:active {
 }
 
 .button {
-    background-color: #4CAF50; /* Green */
+    background-color:#0088BA; /* Green */
+    border: 2px solid #008CBA;
+    border-radius: 4px;
+    color: white;
+    padding: 5px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+.button-login {
+    background-color: #0088BA; /* blue */
+    width:100%;
     border: none;
     color: white;
     padding: 5px 32px;
@@ -121,7 +144,7 @@ a.calendar-link:hover, a.calendar-link:active {
     cursor: pointer;
 }
 .popupbutton {
-    background-color: #4CAF50; /* Green */
+    background-color: #0088BA; /* blue */
     border: none;
     color: white;
     padding: 5px 32px;
@@ -148,11 +171,11 @@ a.calendar-link:hover, a.calendar-link:active {
 
 .form-signin {
   max-width: 380px;
-  padding: 15px 35px 45px ;
-  margin: 100 auto;
-  background-color: #fff;
+  padding: 0px 35px 20px;
+  margin: 0 auto;
+  background-color: #F5F5F5 !important;
   border: 5px solid #008CBA;  
-
+  margin-top: 50px;
   .form-signin-heading,
 	.checkbox {
 	  margin-bottom: 30px;
@@ -183,11 +206,10 @@ border: 1px solid blue;
 	  border-bottom-left-radius: 0;
 	  border-bottom-right-radius: 0;
 	}
-
-
 	input[type="password"] {
 	  margin-bottom: 20px;
 	  border-top-left-radius: 0;
 	  border-top-right-radius: 0;
 	}
+  
 }

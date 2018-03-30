@@ -21,6 +21,7 @@ class CreditcardPageView(View) :
 
     def get(self, request, client_id):
         response = {'client_id':client_id}
+        response['form'] = CardForm()
         response['cards'] = Card.objects.filter(client_id=client_id)
         return render(request,'creditcard/creditcard.html', response )
 
@@ -28,20 +29,21 @@ class CreditcardPageView(View) :
 #view to create credit card for client
 class CreateCreditCardPageView(View):
     
-    def get(self, request, client_id):
-        response = {'client_id': client_id }
-        response['form'] = CardForm()
-        return render(request, 'creditcard/createcreditcard.html', response)
+    # def get(self, request, client_id):
+    #     response = {'client_id': client_id }
+    #     response['form'] = CardForm()
+    #     return render(request, 'creditcard/createcreditcard.html', response)
     
     def post(self, request, client_id):
         response = {'client_id': client_id }
-        response['form'] = CardForm()
         form = CardForm(request.POST)
+        print form.is_valid()
+        print form.errors
         if form.is_valid():
             f=form.save(commit=False)
             card = Card.objects.filter(client_id=client_id)
             if card :
-            	pass
+                pass
             else :
                 f.primary=True
             f.expirydate=request.POST.get('expirydate')
@@ -54,15 +56,17 @@ class CreateCreditCardPageView(View):
             f.card_token=cardtoken['id']
             client.save()
             f.save()
-            return redirect(reverse('creditcard' ,kwargs ={'client_id': client_id}))
+            return render(request, 'creditcard/createcreditcard.html')
         else:
-        	return render(request, 'creditcard/createcreditcard.html', response)
+            response['form'] = form
+            return render(request, 'creditcard/createcreditcard.html', response)
 
 
 # view to delete credit card for client
 class DeleteCreditCardPageView(View):
 
     def get(self, request, client_id, card_id):
+        card_id = int(request.GET.get('card_id'))
         card = Card.objects.get(id=card_id)
         stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
         cu = stripe.Customer.retrieve(card.client.stripetoken)

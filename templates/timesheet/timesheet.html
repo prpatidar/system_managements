@@ -1,30 +1,14 @@
-{% load static %}
-<br>
-<div class="logout">
-    
-  <a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-  <a class="buttonlink" href="{% url 'home' %}">Home </a>
-
- </div> 
-<br>
- <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
- </head>
+{% include 'base.html' %}
+<script type="text/javascript">
+ $(document).on("click", ".popupbutton", function () {
+     var myBookId = $(this).data('id');
+      $("#day").val( myBookId );
+});
+</script>
+{% block content %}
 <center>
-
-
-
 <h1> <font color="#0088BA">Time Sheet </font> <br> </h1>
 <!-- <h2>{{project.title}}   </h2> -->
-
-
-
 <table  width="20%">
   <tr>
     <th> 
@@ -42,16 +26,7 @@
   </tr>
 </table>
 <br>
-<script type="text/javascript">
- $(document).on("click", ".popupbutton", function () {
-     var myBookId = $(this).data('id');
-     $("#day").val( myBookId );
-    // $('#addBookDialog').modal('show');
-});
- 
 
-</script>
-{{project.payment_type}}
 <table width="90%"  border="1">
 <tr bgcolor=" #0088BA">
 <th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
@@ -61,7 +36,7 @@
      <tr >
     {% endif %}
        
-     <td height="80px" bgcolor="white">
+     <td height="80px" bgcolor="#F5F5F5">
            
            {% if i != 0  %} 
                {% if i in daylist %}
@@ -144,6 +119,7 @@
  {% endfor %}
 
 </table>
+<br><br>
 </center>
 
 
@@ -157,24 +133,26 @@
             <div class="modal-body">
          
 <center>
+
 {% if tasklist%}
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
-
+<h1> <b> Fill Your Working Hours </b></h1>
 {% csrf_token %}
+<b> Task </b>
 <select class="stylesheet" name="taskname">
   {% for task in tasklist %}
    <option>{{task}}</option>
   {% endfor %}
 </select><br>
-Spend Time
+<b>Spend Time </b>
 <input type ="text" name="spendtime" />
-<input type="hidden" name="day" id="day" />
+<input type="hidden" name="day" id="day" /> 
 <br>
-<button class="button button2" type="submit" >Update </button>
+<button class="button" type="submit" >Update </button>
 {% else %}
 <b> No any task to Fill Timesheet </b>
 {% endif %}
-<button type="button" class="button button2" data-dismiss="modal">Close</button>
+<button type="button" class="button" data-dismiss="modal">Close</button>
 
 </form>
 </center>
@@ -182,4 +160,4 @@ Spend Time
         </div>
       </div>
     </div>
-  
+{% endblock %}

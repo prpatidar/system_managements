@@ -1,30 +1,25 @@
-<br>
-<div class="logout">
-<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div>
+{% include 'base.html' %}
+{% block content %}
 
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script src="{% static 'js/dataTables.js' %}" ></script>
-
-</head>
 
 <div class="table-block">
 
 <center>
-<h1>   
+<!-- <h1>   
 <a class="button" href="{% url 'createcreditcard' client_id=client_id%}"> Add Credit Card </a>
+</h1> -->
+<div align="right"> 
+<h1>   
+<button class="button" data-toggle="modal" data-target="#myModal"> Add Credit Card </button>
 </h1>
+</div>
 <table id="myTable" class="display">
     <thead>
         <tr >
             <th>Client ID </th>
             <th>Card Holder</th>
             <th>Card Number</th>
+            <th>Card Type</th>
             <th>CVV </th>
             <th>Expiry Date</th>
             <th>Card Token</th>
@@ -38,26 +33,57 @@
             <td>{{card.client_id}}</td>
             <td>{{card.card_holder}}</td>
             <td>{{card.card_number}}</td>
+            <td>{{card.card_type}}</td>
             <td>{{card.cvv_number}}</td>
             <td>{{card.expirydate}}</td>
             <td>{{card.card_token}}</td>
-            <td>{% if card.primary == True %}<b> Primary Card </b>
+            <td>{% if card.primary == True %}<b> Primary Card </b></td><td></td>
                 {% else %}
                 <a class="button" href="{% url 'primarycreditcard' client_id=client_id card_id=card.id%}">Primary </a>
-                {% endif %}
-            </td>
-            <td><a class="button" href="{% url 'deletecreditcard' client_id=client_id card_id=card.id%}"> Delete </a></td>
+                </td>
+            
+            <td><a id="deletebutton" data-id="{{card.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a></td>
+            {% endif %}
         </tr>
     </tbody>
 {% endfor %}
 </table>
 </center>
 </div>
+{% endblock %}
+
 <script type="text/javascript">
 $(document).ready(function(){
     $('#myTable').DataTable();
+
+
+$(document).on("click", "#deletebutton", function () {
+     var myBookId = $(this).data('id');
+      $("#card_id").val( myBookId );
+     });
+
 });
 </script>
 
- 
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="modal-body">
+{% include 'creditcard/createcreditcard.html' %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="modal-body-delete">
+            <form class="form-signin" action="{% url 'deletecreditcard' client_id=client_id card_id=0%}" method="get">
+            <h1><b> Confirm Delete </b></h1>
+            <input type="hidden" id="card_id" name="card_id">
+            <button class="button" type="submit" >Yes </button>
+            <button type="button" class="button " data-dismiss="modal">No</button>
+            </form>
+        </div>
+    </div>
+</div>
 

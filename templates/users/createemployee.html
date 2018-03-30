@@ -1,20 +1,53 @@
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-</head>
-
-
 <center>
- 
-<form class="form-signin"  action="{% url 'createemployee' manager_id=manager_id %}" method="post">
-   <div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div>
-<h1> Create Employee </h1><br><br>
-
-    {% csrf_token %}
-    {{ form.as_p }}
-<button class="button button2" type="submit" >Create Employee </button>
+{% if form %}
+<form class="form-signin" id="form-signin" form-url="{% url 'createemployee' manager_id=manager_id %}" method="POST">
+   <div align="right"> </div>
+<h1> <b>Create Employee</b> </h1>
+   {% csrf_token %}
+   <b>{{ form.email }}
+  <font color="red" ><div id="error">{{form.email.errors}}</div></font>
+  {{ form.username }}
+  <font color="red" ><div id="error">{{form.username.errors}}</div></font>
+  {{ form.first_name }}
+  {{ form.last_name }}</b>
+  <!-- {{form.as_p}} -->
+<button class="button" type="button" id="create_btn" >Create </button>
+<button type="button" class="button " data-dismiss="modal">Close</button> 
 </form>
+{% else %}
+<form class="form-signin">
+<h1><b> Employee Created Successfully </b></h1>
+
+</form>
+<script type="text/javascript">
+	setTimeout(function(){
+                          location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+                      }, 1500)   
+</script>
+{% endif %}
 </center>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+
+
+ var form = $('.form-signin');
+    $('#create_btn').on('click', function(event){
+      event.preventDefault();
+
+      $.ajax({
+        method: "POST",
+        url: form.attr("form-url"),
+        data: form.serialize(),
+        dataType: 'html',
+        success: function (data) {
+           
+        $("#modal-body").html(data); 
+        $('#myModal').modal('show');   
+          }
+
+        })
+      });
+
+});
+</script>

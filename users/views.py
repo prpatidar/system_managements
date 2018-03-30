@@ -5,6 +5,7 @@ from collections import OrderedDict
 from django import forms
 from django.conf import settings
 from django.template import loader
+from django.http import JsonResponse
 from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
@@ -41,6 +42,8 @@ class EmployeePageView(View) :
     def get(self, request, manager_id):
         response = {'manager_id':manager_id}
         User = get_user_model()
+        form = EmployeeForm()
+        response['form'] = form
         response['users'] = User.objects.filter(role='employee',createdby=manager_id)
         return render(request,'users/employee.html', response )
 
@@ -51,6 +54,9 @@ class ClientPageView(View) :
     def get(self, request, manager_id):
         response = {'manager_id':manager_id}
         response['users'] = User.objects.filter(role='client',createdby=manager_id)
+        form = EmployeeForm()
+        form.fields['role'].widget = forms.HiddenInput()
+        response['form'] = form
         return render(request,'users/client.html', response )
 
 
@@ -58,6 +64,7 @@ class ClientPageView(View) :
 class DeleteProfilePageView(View):
 
     def get(self, request, employee_id, manager_id):
+        employee_id = request.GET.get('employee_id')
         User.objects.filter(id=employee_id).delete()
         return redirect(reverse('employee' ,kwargs ={'manager_id': manager_id}))
 
@@ -66,6 +73,7 @@ class DeleteProfilePageView(View):
 class DeleteClientPageView(View):
 
     def get(self, request, employee_id, manager_id):
+        employee_id = request.GET.get('employee_id')
         user = User.objects.get(id=employee_id)
         stripe.api_key = "sk_test_6NXzQP1ksrl4ApeJn5TdJ9SW"
         cu = stripe.Customer.retrieve(user.stripetoken)
@@ -79,20 +87,15 @@ class DeleteClientPageView(View):
 # this class is used to create a employee under login manager
 class CreateEmployeePageView(View):
 
-    def get(self, request, manager_id):
-        form = EmployeeForm()
-        form.fields['role'].widget = forms.HiddenInput()
-        response = {'form':form,'manager_id':manager_id}
-        return render(request,'users/createemployee.html', response)
-
     def post(self, request, manager_id):
         form = EmployeeForm(request.POST)
         if form.is_valid():
+            print "hii"
             employee=form.save(commit=False)
             employee.role="employee"
             employee.createdby=manager_id
             employee.save()
-            return redirect(reverse('employee' ,kwargs ={'manager_id': manager_id}))
+            return render(request,'users/createemployee.html')
         else :
             response = {'form':form,'manager_id':manager_id}
             return render(request,'users/createemployee.html', response)
@@ -100,12 +103,6 @@ class CreateEmployeePageView(View):
 
 # this class is used to create client under a login manager
 class CreateClientPageView(View):
-
-    def get(self, request, manager_id):
-        form = EmployeeForm()
-        form.fields['role'].widget = forms.HiddenInput()
-        response = {'form':form,'manager_id':manager_id}
-        return render(request,'users/createclient.html', response)
 
     def post(self, request, manager_id):
         form = EmployeeForm(request.POST)
@@ -118,10 +115,11 @@ class CreateClientPageView(View):
             employee.stripetoken=stripetoken['id']
             print employee.stripetoken
             employee.save()
-            return redirect(reverse('client' ,kwargs ={'manager_id': manager_id}))
+            return render(request,'users/createclient.html')
         else :
             response = {'form':form,'manager_id':manager_id}
             return render(request,'users/createclient.html', response)
+
 
 
 # this class is used to update user profile
@@ -135,8 +133,13 @@ class UpdateProfilePageView(View):
         return render(request,'users/updateprofile.html' , response)
 
     def post(self, request, employee_id):
+        data = User.objects.get(id=employee_id)
+        form = EmployeeForm(instance=data)
+        form.fields['role'].widget = forms.HiddenInput()
+        response = {'form':form,'employee_id':employee_id}
         user=User.objects.get(id=employee_id)
         employee=EmployeeForm(request.POST)
+        response['formerror']= employee
         if employee.is_valid():
             if employee.cleaned_data['first_name']:
                 user.first_name=employee.cleaned_data['first_name']
@@ -146,5 +149,7 @@ class UpdateProfilePageView(View):
                 user.email=employee.cleaned_data['email']
             if employee.cleaned_data['username']:
                 user.username=employee.cleaned_data['username']
-        user.save()
-        return redirect(reverse('home'))
+            user.save()
+            return render(request,'users/updateprofile.html')
+        else :
+            return render(request,'users/updateprofile.html' , response)

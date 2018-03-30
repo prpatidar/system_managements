@@ -1,26 +1,14 @@
-<br>
-<div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-</div>
-
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script src="{% static 'js/dataTables.js' %}" ></script>
-</head>
-
+{% include 'base.html' %}
+{% block content %}
 <div class="table-block">
 
 
-<center>
+<div align="right"> 
 <h1>   
- <a class="button" href="{% url 'createemployee' manager_id=manager_id%}"> Create Employee </a>
-
-
+<button class="button" data-toggle="modal" data-target="#myModal"> Create Employee </button>
 </h1>
+</div>
+<center>
 <table id="myTable" class="display">
     <thead>
         <tr >
@@ -43,17 +31,75 @@
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
-            <td ><a href="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a> </td>
-            <td ><a href="{% url 'deleteprofile' employee_id=user.id  manager_id=manager_id %}">DeleteProfile</a> </td>
+            <td > <a id="update_btn"  url="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a> </td>
+            <td ><a id="deletebutton" data-id="{{user.id}}" data-target="#myModalDelete" data-toggle="modal"><span class="glyphicon glyphicon-trash"></span></a> </td>
         </tr>
     </tbody>
 {% endfor %}
 </table>
 </center>
 </div>
+
+{% endblock %}
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+            <div class="modal-body" id="modal-body">
+{% include 'users/createemployee.html' %}
+  </div>
+ </div>
+</div>
+
+<div class="modal fade" id="myModalupdate" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="updatemodalbody">
+               
+ </div>
+ </div>
+</div>
+
+
+<div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="modal-body-delete">
+            <form class="form-signin" action="{% url 'deleteprofile' employee_id=0  manager_id=manager_id %}" method="get">
+            <h1><b> Confirm Delete </b></h1>
+            <input type="hidden" id="employee_id" name="employee_id">
+            <button class="button" type="submit" >Yes </button>
+            <button type="button" class="button " data-dismiss="modal">No</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#myTable').DataTable();
+  
+   $('#update_btn').on('click', function(event){
+      event.preventDefault();
+
+      $.ajax({
+        method: "GET",
+        url: $(this).attr("url"),
+        data: {},
+        dataType: 'html',
+        success: function (data) {
+        $("#updatemodalbody").html(data); 
+        $('#myModalupdate').modal('show');  
+          }
+
+        })
+      });
+
+   $(document).on("click", "#deletebutton", function () {
+     var myBookId = $(this).data('id');
+      $("#employee_id").val( myBookId );
+     });
+
+
 });
 </script>
-

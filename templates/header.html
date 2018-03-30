@@ -1,0 +1,36 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      {% if user.email %} 
+      <a class="navbar-brand" href="{% url 'home' %}"><b><span class="glyphicon glyphicon-home"></span>   System Management</b></a>
+      {% else %}
+      <a class="navbar-brand" href="#"><b>System Management</b></a>
+      {% endif %}
+    </div>
+    <ul class="nav navbar-nav">
+      
+      {% if user.role == "manager" %}
+      <li><a href="{% url 'project' manager_id=user.id %}"><b>Project</b> </a></li>
+      <li><a href="{% url 'employee' manager_id=user.id %}"><b>Employees</b></a></li>
+      <li><a href="{% url 'client' manager_id=user.id %}"><b>Clients</b></a></li>
+      {% endif %}
+      {% if user.role == "employee" %}
+      <li><a href="{% url 'employeeprojects' employee_id=user.id %}"><b> projects</b> </a></li>
+      {% endif %}
+      {% if user.role == "client" %}
+      <li><a href="{% url 'clientprojects' client_id=user.id %}"><b> Projects</b> </a></li>
+      <li><a href="{% url 'creditcard' client_id=user.id %}"><b> Credit Cards </b></a></li>
+      {% endif %}
+      
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      {% if user.email %}
+      <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-off"></span> <b>Logout</b></a></li>
+      {% else %}
+      <li><a href="{% url 'account_signup' %}"><b><span class="glyphicon glyphicon-user"></span> Sign Up</b></a></li>
+      <li><a href="{% url 'account_login' %}"><b> <span class="glyphicon glyphicon-log-in"></span>  Login</b></a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

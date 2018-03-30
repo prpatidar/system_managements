@@ -1,20 +1,5 @@
-{% load static %}
-
-<div class="logout">
-    
-  <a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-  <a class="buttonlink" href="{% url 'home' %}">Home </a>
-
- </div> 
-<br>
- <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-
- </head>
-<center>
-
-
+{% extends 'base.html' %}
+{% block content %}
 <center>
 
 <h1> <font color="#0088BA">Time Sheet for Employee ID {{employeeid}}</font> </h1>
@@ -60,11 +45,11 @@
           <b>Today</b> 
           {% else %}
 
-          <td height="80px" bgcolor="white">
+          <td height="80px" bgcolor="#F5F5F5">
            
           {% endif %}
              {% if i != 0  %} 
-               <a href="" class="buttonlink" >{{i}}</a>
+               {{i}}
                <br>
                  {% for timesheet in timesheets %}
                 
@@ -108,5 +93,5 @@
 </table>
 </center>
 
-
+{% endblock %}
 

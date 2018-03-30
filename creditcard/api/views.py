@@ -17,10 +17,20 @@ class ClientCreditCardsView(generics.ListAPIView):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
 
-    def get(self, request,client_id):
-        queryset = Card.objects.filter(client_id=client_id)
-        serializer = CardSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get(self, request):
+        try:
+            client = User.objects.get(email=request.user)
+            if client.role == 'client':
+                queryset = Card.objects.filter(client_id=client.id)
+                serializer = CardSerializer(queryset, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({'status': False,'message': 'you are not a Authorized client '},
+                                status=status.HTTP_400_BAD_REQUEST) 
+        except (AttributeError, ObjectDoesNotExist):
+            return Response({'status': False,
+                             'message': "First Login as a client"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 class CreateCreditCardApiView(generics.CreateAPIView):
     serializer_class = CreateCreditCardSerializer

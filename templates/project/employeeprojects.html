@@ -1,23 +1,11 @@
-<br>
-<div class="logout">
-<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div>
-
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script src="{% static 'js/dataTables.js' %}" ></script>
-</head>
+{% include 'base.html' %}
+{% block content %}
 
 <div class="table-block">
 
 <center>
 <h1>   
-  Projects for Employee ID<br>
-  {{employeeid}}
+  <b>Projects</b>
 
 </h1>
 <table id="myTable" class="display">
@@ -53,3 +41,4 @@ $(document).ready(function(){
     $('#myTable').DataTable();
 });
 </script>
+{% endblock %}

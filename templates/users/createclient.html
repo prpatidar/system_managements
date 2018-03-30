@@ -1,21 +1,61 @@
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-</head>
-
-
+{% if form %}
 <center>
- 
-<form class="form-signin"  action="{% url 'createclient' manager_id=manager_id %}" method="post">
-   <div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div>
+<form class="form-signin" id="form-signin" form-url="{% url 'createclient' manager_id=manager_id %}" method="POST">
 <br>
-<h1> Create Client </h1>
-
+<h1><b> Create Client </b></h1>
     {% csrf_token %}
-    {{ form.as_p }}
-<button class="button button2" type="submit" >Create Client </button>
+    {{ form.email }}
+  <b> <font color="red" ><div id="error">{{form.email.errors}}</div></font>
+  {{ form.username }}
+  <font color="red" ><div id="error">{{form.username.errors}}</div></font>
+  {{ form.first_name }}
+  <font color="red" ><div id="firstname_error"></div></font>
+  {{ form.last_name }}
+  <font color="red" ><div id="lastname_error"></div></font></b>
+<button class="button" type="button" id="create_btn" >Create Client </button>
+<button type="button" class="button" data-dismiss="modal">Close</button>
+
 </form>
 </center>
+{% else %}
+<form class="form-signin">
+<h1><b> Client Created Successfully </b></h1>
+
+</form>
+<script type="text/javascript">
+	     setTimeout(function(){
+                          location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+                      }, 1500)   
+</script>
+
+
+
+
+
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+
+
+    var form = $('.form-signin');
+    $('#create_btn').on('click', function(event){
+        console.log("helllo")
+      event.preventDefault();
+
+      $.ajax({
+        method: "POST",
+        url: form.attr("form-url"),
+        data: form.serialize(),
+        dataType: 'html',
+        success: function (data) {
+             $(".modal-body").html(data);
+                         
+          }
+
+        })
+      });
+
+
+});
+</script>

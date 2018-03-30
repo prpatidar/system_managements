@@ -30,11 +30,38 @@ class AllEmployeesView(generics.ListAPIView):
     queryset = User.objects.filter(role="employee")
     serializer_class = UserSerializer
 
+    def get(self,request):
+        try:
+            manager = User.objects.get(email=request.user)
+            if manager.role != "manager" :
+                return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+            else :
+                queryset = User.objects.filter(role="employee",createdby=manager.id)
+                serializer = UserSerializer(queryset, many=True)
+                return Response(serializer.data)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+
+
 # view to list all clients
 class AllClientsView(generics.ListAPIView):
     
     queryset = User.objects.filter(role="client")
     serializer_class = UserSerializer
+
+    def get(self,request):
+        try:
+            manager = User.objects.get(email=request.user)
+            if manager.role != "manager" :
+                return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+            else :
+                queryset = User.objects.filter(role="client",createdby=manager.id)
+                serializer = UserSerializer(queryset, many=True)
+                return Response(serializer.data)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
 
     
 # view to list a particular employee by its id
@@ -44,9 +71,18 @@ class EmployeeView(generics.ListAPIView):
     serializer_class = UserSerializer
     
     def get(self, request,employee_id):
-        queryset = User.objects.filter(role="employee",id=employee_id)
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
+        try:
+            manager = User.objects.get(email=request.user)
+            if manager.role != "manager" :
+                return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+            else :
+                queryset = User.objects.filter(role="employee",createdby=manager.id,id=employee_id)
+                serializer = UserSerializer(queryset, many=True)
+                return Response(serializer.data)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+
 
 # view to list particular client by its unique id
 class ClientView(generics.ListAPIView):
@@ -55,9 +91,18 @@ class ClientView(generics.ListAPIView):
     serializer_class = UserSerializer
     
     def get(self, request,client_id):
-        queryset = User.objects.filter(role="client",id=client_id)
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
+        try:
+            manager = User.objects.get(email=request.user)
+            if manager.role != "manager" :
+                return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+            else :
+                queryset = User.objects.filter(role="client",createdby=manager.id,id=client_id)
+                serializer = UserSerializer(queryset, many=True)
+                return Response(serializer.data)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'you are not Authorized Manager '}, status=status.HTTP_404_NOT_FOUND)
+
 
 class CreateApiView(generics.CreateAPIView):
     serializer_class = UserSerializer

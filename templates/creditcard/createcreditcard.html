@@ -1,52 +1,101 @@
-
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script type="text/javascript">
-	
-function validateForm()
-{
-
-var expDate=document.getElementById("expDate").value;
-// var cardNumber=document.getElementById("card_number").value;
-// alert(cardNumber)
-            var today = new Date();           
-
-            var formattedtoday = today.getFullYear() + '-' + (today.getMonth()) + '-' + today.getDate();
-            
-            alert(formattedtoday);
-
-        if (formattedtoday < expDate ){
-            alert("The expiry date is before today's date. Please select a valid expiry date");
-            document.getElementById("expDate").value = ''
-            return false;
-            }
-        // if (cardNumber.value.length<16  || isNaN(cardNumber.value)){
-        //     alert("Please enter 16 numbers for your credit card");
-        //     cardNumber.focus();
-        //     return false;
-        //     }
- alert("Thank you for your submission");
- return true;
-}
-
-</script>
-</head>
-
+{% if form %}
 <center>
-
- 
-<form class="form-signin" action="{% url 'createcreditcard' client_id=client_id  %}" method="post">
-  <div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-</div><br>
-<h1> Create Credit Card </h1>
+<form class="form-signin" form-url="{% url 'createcreditcard' client_id=client_id  %}" method="post">
+<h1> <b>Add Credit Card </h1>
     {% csrf_token %}
-    {{ form.as_p }}
-    End Date<input type="date" id="expDate" name="expirydate"><br>
-    <button class="button button2" type="submit" onclick="return validateForm();"  >Create </button>
-     	
+    {{ form.card_type }}
+    {{ form.card_number }}
+        <font color="red" ><div id="card_number_error"> <h:{{form.card_number.errors}}  ></div> </font>
+    {{ form.cvv_number }}
+        <font color="red" ><div id="title_error"> <h:{{form.cvv_number.errors}} ></div></font>
+    {{ form.expirydate }}
+        <font color="red" ><div id="expirydate_error"> <h:{{form.expirydate.errors}} ></div></font>
+        <br>
+    <button class="button" type="button" id="create_btn" onclick="return submitcard();" >Add Card </button>
+    <button type="button" class="button " data-dismiss="modal">Close</button> 
 
+ </b>
 </form>
 </center>
+{% else %}
+<form class="form-signin">
+<h1><b> Card Added Successfully </b></h1>
+
+</form>
+<script type="text/javascript">
+    setTimeout(function(){
+                          location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+                      }, 1500)   
+</script>
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#myTable').DataTable();
+
+});
+
+    // $('.card_number').keyup(function() {
+      function submitcard(){
+        $('.card_number').validateCreditCard(function(result) {
+          var cardtype = $('#card_type').val()
+          console.log("cardtype ",cardtype)
+          console.log(result)
+          console.log("name ",result.card_type.name)
+          if( cardtype != result.card_type.name)
+          {
+           $('#card_number_error').html('Card Type and Card Number Didn\'t match');
+           console.log("1");
+            return false;// $('.card_number').val("")
+          }
+          if( !result.length_valid )
+          {
+           $('#card_number_error').html('Card Number length not valid')
+            console.log("2");
+            return false;
+          }
+          var fm_date = $('.datepicker').val()
+          var date =new Date ((new Date()).getFullYear(),((new Date()).getMonth()),(new Date()).getDate());
+          console.log(date)
+          var form_date = fm_date.split('/');
+          var input_date = new Date(form_date[1],form_date[0]-1,'01');
+          console.log(form_date[1])
+          console.log(form_date[0])
+          console.log(input_date)
+          if( date > input_date )
+          {
+           $('#expirydate_error').html('Enter Correct Expiry Date');
+           console.log("3");
+            return false;// $('.card_number').val("")
+          }
+          if( cardtype == result.card_type.name && result.length_valid )  
+          {
+           $('#card_number_error').html('')
+            console.log("4");
+
+            // ajax code here
+            var form = $('.form-signin');
+    
+            
+            $.ajax({
+                method: "POST",
+                url: form.attr("form-url"),
+                data: form.serialize(),
+                dataType: 'html',
+            success: function (data) {
+                         $("#modal-body").html(data); 
+                    }
+               
+             });
+
+
+            return true;
+            // $('.card_number').val("")
+          }
+          console.log("4");
+            // $('#card_number_error').html('Card type: ' + (result.card_type == null ? 'UnIdentified' : result.card_type.name)
+            //          + '<br>Valid: ' + result.valid
+            //          + '<br>Length valid: ' + result.length_valid
+            //          + '<br>Luhn valid: ' + result.luhn_valid);
+        });
+    }
+</script>

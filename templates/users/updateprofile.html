@@ -1,22 +1,51 @@
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-</head>
-
-
 <center>
-
- 
-<form class="form-signin" action="{% url 'updateprofile' employee_id=employee_id %}" method="post">
-     <div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a><br>
-</div>
-
-    <h1> Update Profile</h1><br>
+{% if form %}
+<form class="form-signin" id="form-signin-update" form-url="{% url 'updateprofile' employee_id=employee_id %}" method="POST">
+   <h1><b> Update Profile</b></h1>
     {% csrf_token %}
-    <b>{{ form.as_p }}</b>
-    
-<button class="button button2" type="submit" >Update Profile </button>
+    <b>{{ form.email }}
+    <font color="red" ><div id="error">{{formerror.email.errors}}</div></font>
+  	{{ form.username }}
+  	<font color="red" ><div id="error">{{formerror.username.errors}}</div></font>
+  	{{ form.first_name }}
+  	<font color="red" ><div id="firstname_error"></div></font>
+  	{{ form.last_name }}
+  	<font color="red" ><div id="lastname_error"></div></font></b>
+<button type="button" class="button"  id="update_btn1"  >Update Profile </button>
+<button type="button" class="button" data-dismiss="modal">Close</button>
+
 </form>
+
+{% else %}
+<form class="form-signin">
+<h1><b> Updated Successfully </b></h1>
+
+</form>
+<script type="text/javascript">
+  setTimeout(function(){
+                          location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+                      }, 1500)   
+</script>
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function(){
+
+ var form = $('#form-signin-update');
+    $('#update_btn1').on('click', function(event){
+       event.preventDefault();
+
+      $.ajax({
+        method: "POST",
+        url: form.attr("form-url"),
+        data: form.serialize(),
+        dataType: 'html',
+        success: function (data) {
+                           $("#updatemodalbody").html(data);  
+                        }
+
+        })
+      });
+
+});
+</script>
 </center>

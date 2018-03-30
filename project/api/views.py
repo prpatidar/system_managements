@@ -14,22 +14,18 @@ class AllProjectsView(generics.ListAPIView):
     serializer_class = ProjectSerializer
 
     def get(self, request):
-        queryset = self.get_queryset()
-        serializer = ProjectSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-# view to list all tasks 
-class AllTasksView(generics.ListAPIView):
-    
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
-    def list(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
-        queryset = self.get_queryset()
-        serializer = TaskSerializer(queryset, many=True)
-        return Response(serializer.data)
+        try :
+            user = User.objects.get(email=request.user.email)
+            if user :
+                queryset = Project.objects.filter(createdby= user.id)
+                serializer = ProjectSerializer(queryset, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({'status': False, 'message': 'Authorization required for Project view'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'Authorization required for Project view'}, status=status.HTTP_404_NOT_FOUND)
+        
 
 
 # view to list a project by project id
@@ -39,10 +35,18 @@ class ProjectView(generics.ListAPIView):
     serializer_class = ProjectSerializer
 
     def get(self, request,project_id):
-        queryset = Project.objects.filter(id=project_id)
-        serializer = ProjectSerializer(queryset, many=True)
-        return Response(serializer.data)
-
+        try :
+            user = User.objects.get(email=request.user.email)
+            if user :
+                queryset = Project.objects.filter(createdby= user.id,id=project_id)
+                serializer = ProjectSerializer(queryset, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({'status': False, 'message': 'Authorization required for Project view'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'Authorization required for Project view'}, status=status.HTTP_404_NOT_FOUND)
+        
 
 # view to list project for employee
 class EmployeeProjectsView(generics.ListAPIView):
@@ -77,9 +81,18 @@ class TasksView(generics.ListAPIView):
     serializer_class = TaskSerializer
 
     def get(self, request,project_id):
-        queryset = Task.objects.filter(project_id=project_id)
-        serializer = TaskSerializer(queryset, many=True)
-        return Response(serializer.data)
+        try :
+            user = User.objects.get(email=request.user.email)
+            if user.role == 'manager' :
+                queryset = Task.objects.filter(project_id=project_id)
+                serializer = TaskSerializer(queryset, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({'status': False, 'message': 'Authorization required for task view'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'Authorization required for task view'}, status=status.HTTP_404_NOT_FOUND)
+        
 
 
 # view to list a task by task id for employees
@@ -89,9 +102,17 @@ class TaskView(generics.ListAPIView):
     serializer_class = TaskSerializer
 
     def get(self, request,project_id,task_id):
-        queryset = Task.objects.filter(id=task_id,project_id=project_id)
-        serializer = TaskSerializer(queryset, many=True)
-        return Response(serializer.data)
+        try :
+            user = User.objects.get(email=request.user.email)
+            if user.role == 'manager' :
+                queryset = Task.objects.filter(project_id=project_id,id=task_id)
+                serializer = TaskSerializer(queryset, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({'status': False, 'message': 'Authorization required for task view'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print e
+            return Response({'status': False, 'message': 'Authorization required for task view'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CreateProjectApiView(generics.CreateAPIView):

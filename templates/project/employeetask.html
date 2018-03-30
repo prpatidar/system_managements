@@ -1,24 +1,13 @@
-<br>
-<div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-</div>
-
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script src="{% static 'js/dataTables.js' %}" ></script>
-</head>
+{% include 'base.html' %}
+{% block content %}
 
 <div class="table-block">
 
 
 <center>
-<h1>   
+<h1> <b>  
   Your Tasks
-
+</b>
 </h1>
 <table id="myTable" class="display">
     <thead>
@@ -46,19 +35,55 @@
             <td>{{task.status}}</td>
             <td>{{task.estimatetime}}</td>
             <td>{{task.spendtime}}</td>
-            <td> <a href="{% url 'updatetask' task_id=task.id %}">Update Task</a></td>
-            <td> <a href="{% url 'updatedate' task_id=task.id %}">Update Dates</a></td>
+            <td> <a class="update_task" url="{% url 'updatetask' task_id=task.id %}">Update Task</a></td>
+            <td> <a class="update_date" url="{% url 'updatedate' task_id=task.id %}">Update Dates</a></td>
         </tr>
     </tbody>
 {% endfor %}
 </table>
 </center>
 </div>
+
+<div class="modal fade" id="myModalupdate" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="updatemodalbody">
+        
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#myTable').DataTable();
+        $('#myTable').DataTable();
+
+   $('.update_task').on('click', function(event){
+      event.preventDefault();
+      $.ajax({
+        method: "GET",
+        url: $(this).attr("url"),
+        data: {},
+        dataType: 'html',
+        success: function (data) {
+                $("#updatemodalbody").html(data); 
+                $('#myModalupdate').modal('show');  
+              }
+        });
+      });
+
+   $('.update_date').on('click', function(event){
+      event.preventDefault();
+      $.ajax({
+        method: "GET",
+        url: $(this).attr("url"),
+        data: {},
+        dataType: 'html',
+        success: function (data) {
+                $("#updatemodalbody").html(data); 
+                $('#myModalupdate').modal('show');  
+              }
+        });
+      });
+
 });
-$('#myTable').DataTable( {
-    autoFill: true
-} );
 </script>
+{% endblock %}

@@ -1,60 +1,123 @@
-<br>
-<div class="logout">
-<a class="buttonlink" href="{% url 'home' %}">Home </a>
-<a class="buttonlink" href="{% url 'account_logout' %}">logout</a>
-</div>
-
-{% load static %}
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/loginform.css' %}" />
-<script src="{% static 'js/dataTables.js' %}" ></script>
-</head>
+{% include 'base.html' %}
+{% block content %}
 
 <div class="table-block">
 
 
-<center>
+<div align="right"> 
 <h1>   
-<a class="button" href="{% url 'createproject' manager_id=manager_id%}"> Create project </a>
+<!-- <a class="button" href="{% url 'createproject' manager_id=manager_id%}" data-toggle="modal" data-target="#myModal"> Create project </a> -->
+<button class="button" data-toggle="modal" data-target="#myModal"> Create project </button>
 </h1>
+</div>
+<center>
 
 <table  id="myTable" class="display">
-	<thead>
+  <thead>
         <tr >
             <th>Project ID </th>
+            <th>Title </th>
             <th> Client ID </th>
-			<th>Title </th>
-			<th>Description</th>
-			<th>Status</th>
-			<th>Rate</th>
-			<th>  </th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for project in projects  %}
+            <th>Status</th>
+            <th>Rate</th>
+            <th>Payment Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+      <th></th>
+            <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for project in projects  %}
   
-  		<tr>   
-			  <td>{{project.id}}</td>   
-			  <td>{{project.client}}</td>
-			  <td><a href="{% url 'task' project_id=project.id manager_id=manager_id%}" > {{project.title}} </a> </td> 
-			  <td>{{project.discription}}</td>
-			  <td>{{project.status}}</td>
-			  <td>{{project.hourlyrate}} $/Hr.</td>
-			  <td ><a href="{% url 'deleteproject' project_id=project.id manager_id=manager_id%}">Delete Project</a></td>
-			  <td ><a href="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" >Time Sheet</a></td>
-  		</tr>
+      <tr>   
+        <td>{{project.id}}</td>   
+        <td>{% if project.status != 'Completed' %} <a class="update_project" url="{% url 'updateproject' project_id=project.id manager_id=manager_id%}"> {{project.title}} </a> 
+                {% else %}
+                {{project.title}}
+                {%endif%}
+                </td> 
+        <td>{{project.client}}</td>
+        <td>
+                {% if project.status == 'Pending' %}<span class="label label-warning">{{project.status}}</span>
+                {% endif  %}
+                {% if project.status == 'Started' %}<span class="label label-info">{{project.status}}</span>
+                {% endif %}
+                {% if project.status == 'Completed' %}<span class="label label-success">{{project.status}}</span>
+                {% endif %}
+              </td>
+        <td>$ {{project.hourlyrate}} Per Hr.</td>
+              <td>{{project.payment_type}} </td>
+              <td>{{project.startdate}} </td>
+              <td>{{project.enddate}}</td>
+              <td><a href="{% url 'task' project_id=project.id manager_id=manager_id%}" >Task </a>
+                
+              </td>
+              <td ><a href="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" >Time Sheet</a>
+                
+              </td>
+        <td >{% if project.status == 'Pending' %}<a id="deletebutton" data-id="{{project.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a> 
+                {%endif%}
+              </td>
     </tbody>
 {% endfor %}
 </table>
 </center>
 </div>
 
+{% endblock %}
 
 <script type="text/javascript">
-$(document).ready(function(){
-    $('#myTable').DataTable();
-});
+$(document).on("click", "#deletebutton", function () {
+    var myBookId = $(this).data('id');
+      $("#project_id").val( myBookId );
+  });
+
+
+    $('.update_project').on('click', function(event){
+      event.preventDefault();
+      $.ajax({
+        method: "GET",
+        url: $(this).attr("url"),
+        data: {},
+        dataType: 'html',
+        success: function (data) {
+                $("#updatemodalbody").html(data); 
+                $('#myModalupdate').modal('show');  
+              }
+        });
+      });
+
 </script>
+
+<div class="modal fade" id="myModalupdate" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="updatemodalbody">
+        
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+            <div class="modal-body">
+{% include 'project/createproject.html' %}
+        </div>
+      </div>
+</div>
+
+
+<div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-body" id="modal-body-delete">
+            <form class="form-signin" action="{% url 'deleteproject' project_id=0 manager_id=manager_id%}" method="get">
+            <h1><b> Confirm Delete </b></h1>
+            <input type="hidden" id="project_id" name="project_id">
+            <button class="button" type="submit" >Yes </button>
+            <button type="button" class="button " data-dismiss="modal">No</button>
+            </form>
+        </div>
+    </div>
+</div>

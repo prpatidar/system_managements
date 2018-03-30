@@ -3,19 +3,27 @@ from __future__ import unicode_literals
 from django.db import models
 
 from users.models import User
-        
-
+status_choices = ( 
+    ('Pending','Pending'),
+    ('Started','Started'),
+    ('Completed','Completed'),
+ )        
+payment_choices = ( 
+    ('Daliy','Daliy'),
+    ('Weekly','Weekly'),
+    ('Monthly','Monthly'),
+ )  
 # this model is used to deal with project related operations
 class Project(models.Model):
     title = models.CharField(max_length=30)
     discription = models.TextField(max_length=100)
-    status = models.CharField(max_length=30, default="Pending", blank=True)
+    status = models.CharField(max_length=30, default="Pending",blank=True, choices=status_choices)
     startdate = models.DateField(null=True, blank=True)
     enddate = models.DateField(null=True, blank=True) #auto_now_add=False,
     createdby = models.CharField(blank=True,max_length=100) #Need To Do
     client = models.ForeignKey(User, blank=True ) 
     hourlyrate = models.IntegerField(blank=True,null=True)
-    payment_type = models.CharField(max_length=10, blank=True,null=True) 
+    payment_type = models.CharField(max_length=10, blank=True,null=True,choices=payment_choices) 
 
 # this model is used to deal with task for a project 
 class Task(models.Model):

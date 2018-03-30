@@ -1,0 +1,83 @@
+<center>
+{% if form %}
+<form class="form-signin" id="form-signin-project-update" form-url="{% url 'updateproject' project_id=project_id manager_id=manager_id%}" method="POST">
+    <h1> <b>Update Project </b></h1>
+    {% csrf_token %}
+        <b>{{ form.title }}
+        <font color="red" ><div id="error">{{form.title.errors}}</div></font>
+        <b>{{ form.discription }}
+        <font color="red" ><div id="error">{{form.discription.errors}}</div></font>
+        <b>{{ form.status }}
+        <font color="red" ><div id="error">{{form.status.errors}}</div></font>
+        <b>{{ form.startdate }}
+        <font color="red" ><div id="error">{{form.startdate.errors}}</div></font>
+        <b>{{ form.enddate }}
+        <font color="red" ><div id="enddate_error">{{form.enddate.errors}}</div></font>
+        <b>{{ form.hourlyrate }}
+        <font color="red" ><div id="error">{{form.hourlyrate.errors}}</div></font>
+        <b>{{ form.payment_type }}
+        <font color="red" ><div id="error">{{form.payment_type.errors}}</div></font>
+        <button class="button" type="button" id="update_project_btn" onclick=" return updateproject();" >Update </button>
+        <button type="button" class="button " data-dismiss="modal">Close</button> 
+    
+</form>  
+{% else %}
+<form class="form-signin">
+    <h1><b> Project Updated Successfully </b></h1>
+</form>
+
+<script type="text/javascript">
+    setTimeout(function(){
+            location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+        }, 1500)   
+</script>
+{% endif %}
+</center>
+<script type="text/javascript">
+$(document).ready(function(){
+    
+    $(".datepicker").datepicker({
+        format: 'yyyy-mm-dd',
+       changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2025",
+      // You can put more options here.
+       });
+});
+    function updateproject(){
+
+    var startdate = $('#startdate').val() ;
+    var enddate = $('#enddate').val() ;
+    
+    if (enddate && startdate > enddate)
+    {
+       
+            $('#enddate_error').html('Enter Correct End Date');
+            console.log("1");
+            return false;// $('.card_number').val("")
+      
+    }
+    else
+    {
+        var form = $('#form-signin-project-update');
+        
+        $('#update_project_btn').on('click', function(event){
+            event.preventDefault();
+            $.ajax({
+                method: "POST",
+                url: form.attr("form-url"),
+                data: form.serialize(),
+                dataType: 'html',
+                
+                success: function (data) {
+                    console.log(data)
+                    $("#updatemodalbody").html(data); 
+                    $('#myModalupdate').modal('show');   
+                }
+            });
+        });
+        return true;
+    }
+  }
+
+</script>
