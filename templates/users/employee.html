@@ -10,6 +10,7 @@
 </div>
 <center>
 <table id="myTable" class="display">
+<!-- <table  class="table table-striped">   -->
     <thead>
         <tr >
             <th>User ID </th>
@@ -18,7 +19,7 @@
             <th>Username </th>
             <th>EmailID</th>
             <th>Role</th>
-            <th></th>
+            
             <th></th>
         </tr>
     </thead>
@@ -27,11 +28,11 @@
         <tr >   
             <td>{{user.id}}</td>  
             <td>{{user.createdby}}</td>
-            <td>{{user.get_full_name}}</td>
+            <td><a class="update_btn"  url="{% url 'updateprofile' employee_id=user.id %}"><b>{{user.get_full_name}}</b> </a></td>
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
-            <td > <a id="update_btn"  url="{% url 'updateprofile' employee_id=user.id %}">Update Profile</a> </td>
+            
             <td ><a id="deletebutton" data-id="{{user.id}}" data-target="#myModalDelete" data-toggle="modal"><span class="glyphicon glyphicon-trash"></span></a> </td>
         </tr>
     </tbody>
@@ -79,7 +80,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   
-   $('#update_btn').on('click', function(event){
+   $('.update_btn').on('click', function(event){
       event.preventDefault();
 
       $.ajax({
@@ -95,7 +96,7 @@ $(document).ready(function(){
         })
       });
 
-   $(document).on("click", "#deletebutton", function () {
+   $(document).on("click", ".deletebutton", function () {
      var myBookId = $(this).data('id');
       $("#employee_id").val( myBookId );
      });

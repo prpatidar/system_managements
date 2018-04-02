@@ -12,7 +12,8 @@
 </div>
 <center>
 
-<table  id="myTable" class="display">
+<table id="myTable" class="display">
+<!-- <table  class="table table-hover">   -->
   <thead>
         <tr >
             <th>Project ID </th>
@@ -24,14 +25,15 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th></th>
-      <th></th>
+            <th></th>
             <th></th>
     </tr>
   </thead>
   <tbody>
     {% for project in projects  %}
-  
-      <tr>   
+    
+      <tr >  
+    
         <td>{{project.id}}</td>   
         <td>{% if project.status != 'Completed' %} <a class="update_project" url="{% url 'updateproject' project_id=project.id manager_id=manager_id%}"> {{project.title}} </a> 
                 {% else %}
@@ -57,9 +59,11 @@
               <td ><a href="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" >Time Sheet</a>
                 
               </td>
-        <td >{% if project.status == 'Pending' %}<a id="deletebutton" data-id="{{project.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a> 
+        <td >{% if project.status == 'Pending' %}<a id="deletebutton" data-id="{{project.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a>
+        {% else %}<b><span class="glyphicon glyphicon-lock"></span></b> 
                 {%endif%}
               </td>
+   
     </tbody>
 {% endfor %}
 </table>

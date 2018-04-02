@@ -3,7 +3,7 @@
 <center>
 
 <script type="text/javascript">
- $(document).on("click", ".popupbutton", function () {
+ $(document).on("click", "#popupbutton", function () {
 
      var myBookId = $(this).data('id');
     
@@ -14,39 +14,42 @@
    
 });
 </script>
-<h1> <font color="#0088BA">Time Sheet for Employee ID {{employeeid}}</font> </h1>
+<h1> <b><span class="label label-primary">Time Sheet for Employee ID {{employeeid}} </span></b></h1>
 
 <form action="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" method="get">
- <font color="#0088BA"> Emp ID :</font><select class="dropdown" name="employee_id" id="employee_id"> 
+<table>
+  <th>
+<select class="form-control" name="employee_id" id="employee_id"> 
       {% for employee in employees %}
-            <option>{{employee}}</option>
+            <option value="{{employee}}">{{employee}}</option>
       {% endfor %}
           </select>
- <button class="button" type="submit"> Change </button>         
-</form>
+  </th>
+  <th>
+ <button class="btn btn-primary btn-md" type="submit"> Change </button>    
+ </th>     
+</table>
+</form></span>
 <table  width="20%">
   <tr>
     <th> 
+       <a  class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=previousyear %}"><b>  << </b></a>
       <a  class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=previousmonth year=year %}"><b>  < </b></a> </th> 
-    <th> <font color="green" ><b> {{monthname}}  </b> </font> </th>
+    <th> <font color="green" ><b> {{monthname}} {{year}}   </b> </font> </th>
     <th > 
-      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
+      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=nextmonth year=year %}"> <b> > </b> </a>
+      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=nextyear %}"> <b> >> </b> </a> <br> </th>
   </tr>
-  <tr>
-    <th > 
-      <a  class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=previousyear %}"><b>  < </b></a> </th> 
-    <th> <font color="green" ><b> {{year}}  </b> </font> </th>
-    <th > 
-      <a class="calendar-link" href="{% url 'managertimesheet' employeeid=employeeid project_id=project.id manager_id=manager_id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
-  </tr>
+  
 </table>
 <br>
 
 </script>
-{{project.payment_type}}
-<table width="90%"  border="1">
+
+<table width="90%"  border="1" class="table-bordered">
 <tr bgcolor=" #0088BA">
-<th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
+<th width="13%"><center> MONDAY</th><th width="13%"><center>TUESDAY</th><th width="13%"><center>WEDNESDAY</th><th width="13%"><center>THURSDAY</th> <th width="13%"><center>FRIDAY</th> <th width="13%"><center>SATURDAY</th> <th width="13%"><center>SUNDAY</th>
+</center>
 </tr>
 {% for i in  days %}
     {% if forloop.counter == 1 or forloop.counter == 8 or forloop.counter == 15  or forloop.counter == 22 or forloop.counter == 29 %}
@@ -62,18 +65,21 @@
                {{i}}
                <br>
                  {% for timesheet in timesheets %}
-                  {% if timesheet.day == i %}
+                  {% if timesheet.day == i and timesheet.status != "pending"%}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
+                  <!--  {{timesheet.status}} -->
                    {% if timesheet.payment == 0 %}
+                    {% if timesheet.status == "aprove" %}
                      <b> Payment Pending </b>
+                    {% endif %}
                    {% else %}
-                     <b> Paid &#8377; {{timesheet.payment}} </b>
+                     <b> Paid $ {{timesheet.payment}} </b>
                    {% endif %}
                    <br>
                     {% if project.payment_type == "Daliy" and timesheet.status == "submit" %}
-                    <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
-                    <button data-id="{{i}}" data-id1="1" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
+                    <a class="button button2" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
+                    <button data-id="{{i}}" data-id1="1" id="popupbutton" data-toggle="modal" data-target="#myModal" class="button button2">Reject</button><br>
                     {% endif %}
 
                     {% if project.payment_type == "Weekly" and timesheet.status == "submit"  %}
@@ -84,8 +90,8 @@
                    {% endif %}
 
                    {% if project.payment_type == "Monthly" and i == 1 and timesheet.status == "submit"   %}
-                    <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=3 %}" >Aprove </a> 
-                    <button data-id="{{i}}" data-id1="3" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
+                    <a class="button button2" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=3 %}" >Aprove </a> 
+                    <button data-id="{{i}}" data-id1="3" id="popupbutton" data-toggle="modal" data-target="#myModal" class="button button2">Reject</button><br>
                    {% endif %} 
 
                   {% endif %}

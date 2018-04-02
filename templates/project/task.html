@@ -14,9 +14,9 @@
 <table  id="myTable" class="display">
     <thead>
         <tr >
-            <th>Projet ID </th>
-            <th>Title </th>
-            <th>Description</th>
+            <th>Projet Name </th>
+            <th>Task Title </th>
+            <th>Status</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Employee ID</th>
@@ -26,13 +26,22 @@
     <tbody>
         {% for task in tasks  %}
         <tr> 
-            <td>{{project_id}}</td>
+            <td>{{task.project.title}}</td>
             <td>{{task.title}}</td>
-            <td>{{task.discription}}</td>
+            <td>
+                {% if task.status == 'Pending' %}<span class="label label-warning">{{task.status}}</span>
+                {% endif  %}
+                {% if task.status == 'Started' %}<span class="label label-info">{{task.status}}</span>
+                {% endif %}
+                {% if task.status == 'Completed' %}<span class="label label-success">{{task.status}}</span>
+                {% endif %}
+              </td>
             <td>{{task.startdate}}</td>
             <td>{{task.enddate}}</td>
-            <td>{{task.employee.email}}</td>
-            <td > <a id="deletebutton" data-id="{{task.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a> </td>
+            <td><span class="label label-default">{{task.employee.email}}</span></td>
+            <td > {% if task.status == 'Pending' %} <a id="deletebutton" data-id="{{task.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a>
+                {% else %}<a><b><span class="glyphicon glyphicon-lock"></span></b></a>
+            {%endif%} </td>
          </tr>
     </tbody>
 {% endfor %}

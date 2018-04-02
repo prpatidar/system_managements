@@ -15,17 +15,18 @@
       <li><a href="{% url 'client' manager_id=user.id %}"><b>Clients</b></a></li>
       {% endif %}
       {% if user.role == "employee" %}
-      <li><a href="{% url 'employeeprojects' employee_id=user.id %}"><b> projects</b> </a></li>
+      <li><a href="{% url 'employeeprojects' employee_id=user.id %}"><b> Project</b> </a></li>
       {% endif %}
       {% if user.role == "client" %}
-      <li><a href="{% url 'clientprojects' client_id=user.id %}"><b> Projects</b> </a></li>
-      <li><a href="{% url 'creditcard' client_id=user.id %}"><b> Credit Cards </b></a></li>
+      <li><a href="{% url 'clientprojects' client_id=user.id %}"><b> Project</b> </a></li>
+      <li><a href="{% url 'creditcard' client_id=user.id %}"><b> Credit Card </b></a></li>
       {% endif %}
       
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
       {% if user.email %}
+      <li><a><b>Welcome <span class="glyphicon glyphicon-user"></span> | {{user.email}}</b></a></li>
       <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-off"></span> <b>Logout</b></a></li>
       {% else %}
       <li><a href="{% url 'account_signup' %}"><b><span class="glyphicon glyphicon-user"></span> Sign Up</b></a></li>

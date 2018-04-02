@@ -146,8 +146,8 @@ a.calendar-link:hover, a.calendar-link:active {
 .popupbutton {
     background-color: #0088BA; /* blue */
     border: none;
+    width: 30px;
     color: white;
-    padding: 5px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -158,10 +158,17 @@ a.calendar-link:hover, a.calendar-link:active {
     cursor: pointer;
 }
 .button2 {
-    background-color: white; 
-    color: black; 
-    border: 2px solid #008CBA;
-     border-radius: 20px;
+    background-color: #0088BA; /* blue */
+    border: none;
+    width: 100px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
 }
 
 .button2:hover {

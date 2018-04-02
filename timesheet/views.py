@@ -72,7 +72,7 @@ class TimeSheetPageView(View):
             if task.enddate :
                 if task.startdate <= date and task.enddate >= date :
                     tasklist.append(task.title)
-            elif task.startdate :
+            if task.startdate :
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist

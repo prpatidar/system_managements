@@ -7,29 +7,26 @@
 </script>
 {% block content %}
 <center>
-<h1> <font color="#0088BA">Time Sheet </font> <br> </h1>
-<!-- <h2>{{project.title}}   </h2> -->
+<h1> <b><span class="label label-primary">Time Sheet</span> </b>  </h1>
 <table  width="20%">
   <tr>
     <th> 
+      <a  class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=previousyear %}"><b>  << </b></a>
       <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=previousmonth year=year %}"><b>  < </b></a> </th> 
-    <th> <font color="green" ><b> {{monthname}}  </b> </font> </th>
+    <th> <font color="green" ><b> {{monthname}} {{year}} </b> </font> </th>
     <th > 
-      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=nextmonth year=year %}"> <b> > </b> </a> <br> </th>
+      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=nextmonth year=year %}"> <b> > </b> </a> 
+      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=nextyear %}"> <b> >> </b> </a> <br> </th>
   </tr>
-  <tr>
-    <th > 
-      <a  class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=previousyear %}"><b>  < </b></a> </th> 
-    <th> <font color="green" ><b> {{year}}  </b> </font> </th>
-    <th > 
-      <a class="calendar-link" href="{% url 'timesheet' employee_id=employee_id project_id=project.id month=month year=nextyear %}"> <b> > </b> </a> <br> </th>
-  </tr>
+  
 </table>
 <br>
+<!-- class="table-bordered" -->
+<table width="90%"  border="1" class="table-bordered" >
+<tr bgcolor=" #0088BA" >
 
-<table width="90%"  border="1">
-<tr bgcolor=" #0088BA">
-<th>MONDAY</th><th>TUESDAY</th><th>WEDNESDAY</th> <th>THURSDAY</th> <th>FRIDAY</th> <th>SATURDAY</th> <th>SUNDAY</th>
+<th width="13%"><center> MONDAY</th><th width="13%"><center>TUESDAY</th><th width="13%"><center>WEDNESDAY</th><th width="13%"><center>THURSDAY</th> <th width="13%"><center>FRIDAY</th> <th width="13%"><center>SATURDAY</th> <th width="13%"><center>SUNDAY</th>
+</center>
 </tr>
 {% for i in  days %}
     {% if forloop.counter == 0 or forloop.counter == 8 %}
@@ -37,17 +34,17 @@
     {% endif %}
        
      <td height="80px" bgcolor="#F5F5F5">
-           
+      <center>     
            {% if i != 0  %} 
                {% if i in daylist %}
                  
-                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal">{{i}}</button><br>                 
+                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal"><b>{{i}}</b></button><br>                 
                  {% for timesheet in timesheets %}
 
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
-                   <b>{{timesheet.status}}</b><br>
+                   <!-- <b>{{timesheet.status}}</b><br> -->
                    
                                        
                     {% if project.payment_type == "Daliy" %}
@@ -77,15 +74,15 @@
               {% endif %}
 
               {% if i not in daylist %}
-              {{i}}
+              <b>{{i}}</b>
                <br>
                  {% for timesheet in timesheets %}
                   {% if timesheet.day == i %}
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
                    
-                   <b>{{timesheet.status}}</b><br>
-                   
+                  <!--  <b>{{timesheet.status}}</b><br>
+                    -->
                     
                     {% if project.payment_type == "Daliy" %}
                        {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
@@ -111,7 +108,8 @@
                  {% endfor %}  
               {% endif %}
 
-           {% endif %} 
+           {% endif %}
+           </center> 
          </td>
     {% if forloop.counter == 7 or forloop.counter == 14  or forloop.counter == 21 or forloop.counter == 28 or forloop.counter == 35 %}
      </tr>
@@ -126,38 +124,42 @@
 
 
 
+{% endblock %}
 
-
-  <div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-            <div class="modal-body">
+        <div class="modal-body">
          
 <center>
 
 {% if tasklist%}
 <form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
-<h1> <b> Fill Your Working Hours </b></h1>
+<h1> <b> Fill Working Hours </b></h1>
 {% csrf_token %}
-<b> Task </b>
-<select class="stylesheet" name="taskname">
+<b>
+<select class="form-control" name="taskname" placeholder="Select Task" required="">
+
   {% for task in tasklist %}
    <option>{{task}}</option>
   {% endfor %}
-</select><br>
-<b>Spend Time </b>
-<input type ="text" name="spendtime" />
+</select>
+
+<input type ="text" name="spendtime"  placeholder="Spend Time " required=""/>
 <input type="hidden" name="day" id="day" /> 
 <br>
 <button class="button" type="submit" >Update </button>
+<button type="button" class="button" data-dismiss="modal">Close</button>
+</b>
 {% else %}
-<b> No any task to Fill Timesheet </b>
-{% endif %}
+<form class="form-signin" >
+<h1><b> No any task to Fill Timesheet </b></h1>
 <button type="button" class="button" data-dismiss="modal">Close</button>
 
 </form>
-</center>
+{% endif %}
 
+</form>
+</center>
         </div>
-      </div>
     </div>
-{% endblock %}
+</div>
