@@ -16,7 +16,7 @@
 <table id="myTable" class="display">
     <thead>
         <tr >
-            <th>Client ID </th>
+            
             <th>Card Holder</th>
             <th>Card Number</th>
             <th>Card Type</th>
@@ -30,7 +30,7 @@
     <tbody>
         {% for card in cards  %}
         <tr > 
-            <td>{{card.client_id}}</td>
+            
             <td>{{card.card_holder}}</td>
             <td>{{card.card_number}}</td>
             <td>{{card.card_type}}</td>
@@ -39,7 +39,7 @@
             <td>{{card.card_token}}</td>
             <td>{% if card.primary == True %}<b> Primary Card </b></td><td></td>
                 {% else %}
-                <a class="button" href="{% url 'primarycreditcard' client_id=client_id card_id=card.id%}">Primary </a>
+                <a  href="{% url 'primarycreditcard' client_id=client_id card_id=card.id%}">Primary </a>
                 </td>
             
             <td><a id="deletebutton" data-id="{{card.id}}" data-target="#myModalDelete" data-toggle="modal" > <span class="glyphicon glyphicon-trash"></span> </a></td>

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% include 'base.html' %}
 {% block content %}
 <center>
 
@@ -9,7 +9,7 @@
   <th>
   <select  name="employee_id" class="form-control" id="employee_id"> 
       {% for employee in employees %}
-            <option>{{employee}}</option>
+            <option value="{{employee}}">{{employee}}</option>
       {% endfor %}
           </select>
   </th>
@@ -43,15 +43,10 @@
     {% if forloop.counter == 0 or forloop.counter == 8 %}
      <tr >
     {% endif %}
-       {% if today == i and month == currentmonth and year == currentyear %}
-          <td height="80px" bgcolor="#ccccff"> 
-            {{today}}{{i}}
-          <b>Today</b> 
-          {% else %}
+       
 
-          <td height="80px" bgcolor="#F5F5F5">
-           
-          {% endif %}
+          <td height="80px" bgcolor="#F5F5F5" class="td{{i}}">
+         
              {% if i != 0  %} 
                {{i}}
                <br>
@@ -61,10 +56,26 @@
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
                    
+                   {% if timesheet.payment == 0 %}
+                   {% if timesheet.status == "aprove" %}
+                    <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#C2F26E"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                    
+                   {% else %}
+                     
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       console.log("grreen")
+                     </script>
+                   {% endif %}
+
                    {% if project.payment_type == "Daliy" and timesheet.payment == 0 %}
                     <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=1 %}" >Pay </a> 
                   {% elif project.payment_type == "Daliy" %}
-                  <b> Paid &#8377; {{timesheet.payment}} </b>
+                  <b> Paid $ {{timesheet.payment}} </b>
                     {% endif %}
 
                     {% if project.payment_type == "Weekly" and timesheet.payment == 0 %}
@@ -72,7 +83,7 @@
                       <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
                        {% endif %}
                     {% elif project.payment_type == "Weekly" %}
-                      <b> Paid &#8377; {{timesheet.payment}} </b>
+                      <b> Paid $ {{timesheet.payment}} </b>
                    {% endif %}
                   
                      {% if project.payment_type == "Monthly" and timesheet.payment == 0 %}
@@ -80,7 +91,7 @@
                       <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
                        {% endif %}
                     {% elif project.payment_type == "Monthly" %}
-                      <b> Paid &#8377; {{timesheet.payment}} </b>
+                      <b> Paid $ {{timesheet.payment}} </b>
                    {% endif %}
 
                   {% endif %}

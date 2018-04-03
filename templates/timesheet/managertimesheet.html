@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% include 'base.html' %}
 {% block content %}
 <center>
 
@@ -44,7 +44,6 @@
 </table>
 <br>
 
-</script>
 
 <table width="90%"  border="1" class="table-bordered">
 <tr bgcolor=" #0088BA">
@@ -59,7 +58,7 @@
     {% endif %}
       
 
-          <td height="80px" bgcolor="#F5F5F5">
+          <td height="80px" bgcolor="#F5F5F5" class="td{{i}}">
              
              {% if i != 0  %} 
                {{i}}
@@ -71,10 +70,25 @@
                   <!--  {{timesheet.status}} -->
                    {% if timesheet.payment == 0 %}
                     {% if timesheet.status == "aprove" %}
-                     <b> Payment Pending </b>
+                     <b> Payment Pending</b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#C2F26E"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                    {% if timesheet.status == "rejected" %}
+                     
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#FF9999"); 
+                       console.log("grreen")
+                     </script>
                     {% endif %}
                    {% else %}
                      <b> Paid $ {{timesheet.payment}} </b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       console.log("grreen")
+                     </script>
                    {% endif %}
                    <br>
                     {% if project.payment_type == "Daliy" and timesheet.status == "submit" %}
@@ -118,22 +132,20 @@
     <div class="modal-dialog">
             <div class="modal-body"> 
 
-<div class="table-block" >
 
-<form  action="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day='1' month=month year=year period=0  %}" method="post">
+<form class="form-signin" action="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day='1' month=month year=year period=0  %}" method="post">
 
 {% csrf_token %}
-Reason For Rejection
-<input type ="text" name="comment" />
+<h1><b>Reason for Rejection</h1>
+<input type ="text" name="comment"  />
 <input type="hidden" name="day" id="day" />
 <input type="hidden" name="period" id="period" />
 <br>
 <button class="button button2" type="submit" >Update </button>
 <button type="button" class="button button2" data-dismiss="modal"> Close </button>
 </form>
-</div>
 
-
+</b>
     </div>
   </div>
 </div>

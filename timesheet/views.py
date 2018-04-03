@@ -276,7 +276,10 @@ class ClientTimeSheetPageView(View):
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
-        response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
+        employees = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
+        # employee_email = User.objects.filter(id__in=employees)
+        response['employees'] = employees
+        # response['employee_email'] = employee_email
         print response['employees']
         return render(request,'timesheet/clienttimesheet.html', response )
              

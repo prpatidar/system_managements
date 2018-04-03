@@ -12,11 +12,9 @@
     <thead>
         <tr >
             <th>User ID </th>
-            <th>Manager ID</th>
             <th> Full Name</th>
             <th>Username </th>
             <th>EmailID</th>
-            <th>Role</th>
             <th>Stripe Token</th>
             
             <th></th>
@@ -26,11 +24,9 @@
         {% for user in users  %}
         <tr >   
             <td>{{user.id}}</td>  
-            <td>{{user.createdby}}</td>
             <td><a class="update_btn" url="{% url 'updateprofile' employee_id=user.id %}"><b>{{user.get_full_name}}</b></a> </td>
             <td>{{user.username}}</td>
             <td>{{user.email}}</td>
-            <td>{{user.role}}</td>
             <td>{{user.stripetoken}}</td>
             
             <td ><a class="deletebutton" data-id="{{user.id}}" data-target="#myModalDelete" data-toggle="modal"><span class="glyphicon glyphicon-trash"></span></a> </td>

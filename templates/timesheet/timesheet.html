@@ -33,7 +33,7 @@
      <tr >
     {% endif %}
        
-     <td height="80px" bgcolor="#F5F5F5">
+     <td height="80px" bgcolor="#F5F5F5" class="td{{i}}">
       <center>     
            {% if i != 0  %} 
                {% if i in daylist %}
@@ -45,7 +45,28 @@
                    <font color="blue" >Task  : </font> {{timesheet.taskname}}<br>
                    <font color="blue" >Time: </font>{{timesheet.spendtime}} Hr<br>
                    <!-- <b>{{timesheet.status}}</b><br> -->
-                   
+                   {% if timesheet.payment == 0 %}
+                   {% if timesheet.status == "aprove" %}
+                     <b> Payment Pending</b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#C2F26E"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                    {% if timesheet.status == "rejected" %}
+                     
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#FF9999"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                   {% else %}
+                     <b> Paid $ {{timesheet.payment}} </b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       console.log("grreen")
+                     </script>
+                   {% endif %}
                                        
                     {% if project.payment_type == "Daliy" %}
                        {% if timesheet.status == "pending" or timesheet.status == "rejected" %}
@@ -83,6 +104,28 @@
                    
                   <!--  <b>{{timesheet.status}}</b><br>
                     -->
+                    {% if timesheet.payment == 0 %}
+                    {% if timesheet.status == "aprove" %}
+                     <b> Payment Pending</b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#C2F26E"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                    {% if timesheet.status == "rejected" %}
+                     
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#FF9999"); 
+                       console.log("grreen")
+                     </script>
+                    {% endif %}
+                   {% else %}
+                     <b> Paid $ {{timesheet.payment}} </b>
+                     <script type="text/javascript">
+                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       console.log("grreen")
+                     </script>
+                   {% endif %}
                     
                     {% if project.payment_type == "Daliy" %}
                        {% if timesheet.status == "pending" or timesheet.status == "rejected" %}

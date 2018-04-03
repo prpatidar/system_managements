@@ -155,7 +155,7 @@ class ProjectFormPageView(View):
         if hourlyrate:
             project.hourlyrate = hourlyrate
         project.save()
-        return redirect(reverse('home'))
+        return redirect(reverse('clientprojects'))
 
 
 #view to update the task starting and end dates

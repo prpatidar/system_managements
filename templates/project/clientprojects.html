@@ -3,10 +3,11 @@
 
 <div class="table-block">
 <center>
-    <h1> <b>  
+    <!-- <h1> <b>  
         Projects for Your Client ID<br>
         {{clientid}}
-    </b> </h1>
+    </b> </h1> -->
+    <br><br><br>
 <table id="myTable" class="display">
     <thead>
         <tr >
@@ -27,8 +28,8 @@
             <td>{{project.discription}}</td>
             <td>{{project.hourlyrate}}</td>
             <td>{{project.payment_type}}</td>
-            <td><button type="button" data-id="{{project.id}}" class="button update_button" data-toggle="modal" data-target="#myModal">Update</button></td>
-            <td><a class="button" href="{% url 'clienttimesheet' employeeid=1 project_id=project.id client_id=client_id month=month year=year %}"> Time Sheet </a> </td>
+            <td><a  data-id="{{project.id}}" class="update_button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit"> Update</span></a></td>
+            <td><a  href="{% url 'clienttimesheet' employeeid=1 project_id=project.id client_id=client_id month=month year=year %}">  <span class="glyphicon glyphicon-calendar"> TimeSheet</span></a> </td>
         </tr>
     </tbody>
 {% endfor %}
@@ -44,11 +45,13 @@
                 <form action="{% url 'projectform' %}" class="form-signin" method="post">  <h1><b>Update Payment Type and  Hourly Rate</b></h1>
                     {% csrf_token %}
                     <b>
-                    <input type="select" name="payment_type" value="Daliy" checked> Select Payment Type  
-                    <input type="radio" name="payment_type" value="Weekly" > Weekly
-                    <input type="radio" name="payment_type" value="Daliy"> Daliy
-                    <input type="radio" name="payment_type" value="Monthly"> Monthly <br> 
-                    <input type="text" name="hourlyrate" placeholder="Hourly Rate"/> <br> 
+                        <select class="form-control" name="payment_type">
+                            <option value="Daliy">Daliy</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    
+                    <input type="text" name="hourlyrate" placeholder="Hourly Rate"/><br>
                     <input type="hidden" name="project_id" id="project_id"  /> 
                     <button class="button " type="submit" >Update </button>
                     <button type="button" class="button " data-dismiss="modal">Close</button></b>
