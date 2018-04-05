@@ -1,26 +1,34 @@
 {% if data %}
 <form class="form-signin" id="form-signin-task-update" form-url="{% url 'updatetask' task_id=task_id %}" method="POST">
-	<h1> <b>Update Task </h1>
-	{% csrf_token %}
-	 	<select class="form-control" name="status">
-	 		<option>In Progress</option>
-	 		<option>Completed</option>
-	 		<option>Testing</option>
-	 		<option>Tested</option>
-	 		<option>Delivered</option>
-	 	</select>
-	 	<input type="text" name="estimatetime" {% if data.estimatetime %} value= "{{ data.estimatetime }}" {% endif %} placeholder="Estimate Time">
-	 	<input type="text" name="spendtime" {% if data.spendtime %} value= {{ data.spendtime }} {% endif %} placeholder="Spend Time">
-		<button class="button" type="button" id="update_task_btn" >Update Task</button>
-		<button type="button" class="button " data-dismiss="modal">Close</button> </b>
-</form>	 
+    <h1> <b>Update Task </h1>
+    {% csrf_token %}
+        
+        <select class="form-control" name="status">
+            {% if data.status %}
+             <option>{{data.status}}</option>
+            {% endif %}
+            <option>In Progress</option>
+            <option>Completed</option>
+            <option>Testing</option>
+            <option>Tested</option>
+            <option>Delivered</option>
+        </select>
+        {{form.estimatetime}}
+        <font color="red" ><div >{{form.estimatetime.errors}}</div></font>
+        {{form.startdate}}
+        <font color="red" ><div >{{form.startdate.errors}}</div></font>
+        {{form.enddate}}
+        <font color="red" ><div >{{form.enddate.errors}}</div></font>
+        <button class="button" type="button" id="update_task_btn" >Update Task</button>
+        <button type="button" class="button " data-dismiss="modal">Close</button> </b>
+</form>  
 {% else %}
 <form class="form-signin">
-	<h1><b> Task Updated Successfully </b></h1>
+    <h1><b> Task Updated Successfully </b></h1>
 </form>
 
 <script type="text/javascript">
-	setTimeout(function(){
+    setTimeout(function(){
             location.reload(); //wait for 5 location.reload();//then reload the page.(3)
         }, 1500)   
 </script>
@@ -30,22 +38,30 @@
 $(document).ready(function(){
     $('#myTable').DataTable();
 
-	var form = $('#form-signin-task-update');
+    var form = $('#form-signin-task-update');
     
     $('#update_task_btn').on('click', function(event){
-    	event.preventDefault();
-		$.ajax({
-        	method: "POST",
-        	url: form.attr("form-url"),
-        	data: form.serialize(),
-        	dataType: 'html',
-        	
-        	success: function (data) {
-            	console.log(data)
-        		$("#updatemodalbody").html(data); 
-        		$('#myModalupdate').modal('show');   
-          	}
+        event.preventDefault();
+        $.ajax({
+            method: "POST",
+            url: form.attr("form-url"),
+            data: form.serialize(),
+            dataType: 'html',
+            
+            success: function (data) {
+                console.log(data)
+                $("#updatemodalbody").html(data); 
+                $('#myModalupdate').modal('show');   
+            }
         });
     });
+
+    $(".datepicker").datepicker({
+        format: 'yyyy-mm-dd',
+       changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2025",
+      // You can put more options here.
+       });
 });
 </script>

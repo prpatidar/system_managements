@@ -1,10 +1,46 @@
 {% include 'base.html' %}
 {% load static %}
 {% block content %}
-
-<center>
-	<br><br><br><br>
+<br><br><br>
+<!-- <center>
+	<br>
 	<img  width="700px" height="400px" src="{% static 'images/a.png' %}" alt="Hi!" />
 </center>
+ -->
+<!-- <div class="container"> -->
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+      <div class="item active">
+      	<center>
+        <img src="{% static 'images/a5.png' %}" alt="Los Angeles" style="width:70%; height:500px;" >
+    	</center>
+      </div>
+
+      <div class="item">
+      	<center>
+        <img src="{% static 'images/a.png' %}" alt="Chicago" style="width:50%;height:400px;">
+        </center>
+      </div>
+    
+      <div class="item">
+      	<center>
+        <img src="{% static 'images/a7.png' %}" alt="New york" style="width:50%;height:400px;">
+        </center>
+      </div>
+    </div>
+
+    <!--  Left and right controls -->
+    
+  </div>
+
+
 </body>
 {% endblock %}

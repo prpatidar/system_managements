@@ -16,7 +16,6 @@
             <th>Description</th>
             <th>Hourly Rate</th>
             <th>Payment Type</th>
-            <th></th>
             <th></th> 
         </tr>
     </thead>
@@ -24,11 +23,10 @@
         {% for project in projects  %}
         <tr > 
             <td>{{project.id}}</td>
-            <td>{{project.title}}</td>
+            <td><a data-id="{{project.id}}" class="update_button" data-toggle="modal" data-target="#myModal">{{project.title}}</a></td>
             <td>{{project.discription}}</td>
             <td>{{project.hourlyrate}}</td>
             <td>{{project.payment_type}}</td>
-            <td><a  data-id="{{project.id}}" class="update_button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-edit"> Update</span></a></td>
             <td><a  href="{% url 'clienttimesheet' employeeid=1 project_id=project.id client_id=client_id month=month year=year %}">  <span class="glyphicon glyphicon-calendar"> TimeSheet</span></a> </td>
         </tr>
     </tbody>

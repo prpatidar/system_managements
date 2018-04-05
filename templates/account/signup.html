@@ -7,7 +7,7 @@
 {% block content %}
 <form  class="form-signin" id="signup_form" method="post" action="{% url 'account_signup' %}">
   
-<center><h1><b>{% trans "Sign Up" %}</b></h1></center>
+<center><h1><b>{% trans "Sign Up" %}</h1></center>
 
 
   {% csrf_token %}
@@ -26,6 +26,7 @@
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <button class="button-login" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  </b>
 </form>
 
 {% endblock %}

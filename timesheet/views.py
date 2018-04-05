@@ -23,11 +23,11 @@ from project.models import Project, Task
 from timesheet.forms import TimeSheetForm
 from project.forms import ProjectForm ,TaskForm
 
-#this a timesheet view for employees
+#its  a timesheet view for employees
 class TimeSheetPageView(View):
 
     def get(self, request, employee_id, project_id, month,year):
-        response = {'employee_id': employee_id, 'month' : month , 'year' : year} 
+        response = {'employee_id': employee_id, 'month' : int(month) , 'year' : year} 
         c=calendar.TextCalendar(calendar.MONDAY)
         days = []
         month = int(month)
@@ -36,7 +36,24 @@ class TimeSheetPageView(View):
         for i in c.itermonthdays(year, month):
             days.append(i)
             totaldays += 1 
-        response['project'] = Project.objects.get(id=project_id)
+        project = Project.objects.get(id=project_id)
+        if project.startdate:
+            startdate = project.startdate
+            splitdate = str(startdate).split('-')
+            response['startmonth'] = int(splitdate[1])
+            response['startday'] = int(splitdate[2])
+        else :
+            response['startmonth'] = 0
+            response['startday'] = 0
+        if project.enddate:
+            enddate = project.enddate
+            splitdate = str(enddate).split('-')
+            response['endmonth'] = int(splitdate[1])
+            response['endday'] = int(splitdate[2])
+        else :
+            response['endmonth'] = int(splitdate[1])
+            response['endday'] = int(splitdate[2])
+        response['project'] = project
         response['timesheets']=TimeSheet.objects.filter(project_id=project_id, month=month, employee_id=employee_id,year=year)
         response['days'] = days
         response['previousmonth'] = month-1
@@ -72,7 +89,7 @@ class TimeSheetPageView(View):
             if task.enddate :
                 if task.startdate <= date and task.enddate >= date :
                     tasklist.append(task.title)
-            if task.startdate :
+            elif task.startdate :
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
@@ -226,7 +243,11 @@ class ClientTimeSheetPageView(View):
     def get(self, request, employeeid, client_id, project_id, month,year):
         emp_id= request.GET.get('employee_id')
         if emp_id :
-            employeeid=emp_id
+            try:
+                user = User.objects.get(email=emp_id)
+                employeeid = user.id
+            except ObjectDoesNotExist:
+                print "exception : user not found"
         response = {'employeeid': employeeid, 'client_id' :client_id , 'month' : month , 'year' : year} 
         c=calendar.TextCalendar(calendar.MONDAY)
         days = []
@@ -276,7 +297,7 @@ class ClientTimeSheetPageView(View):
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
-        employees = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
+        employees = Task.objects.filter(project_id=project_id).values_list('employee_id__email', flat=True).distinct()
         # employee_email = User.objects.filter(id__in=employees)
         response['employees'] = employees
         # response['employee_email'] = employee_email
@@ -291,7 +312,11 @@ class ManagerTimeSheetPageView(View):
     def get(self, request, employeeid,  project_id,manager_id, month, year ):
         emp_id= request.GET.get('employee_id')
         if emp_id :
-            employeeid=emp_id
+            try:
+                user = User.objects.get(email=emp_id)
+                employeeid = user.id
+            except ObjectDoesNotExist:
+                print "exception : user not found"
         response = {'employeeid': employeeid, 'manager_id' :manager_id , 'month' : month , 'year' : year} 
         c=calendar.TextCalendar(calendar.MONDAY)
         days = []
@@ -341,7 +366,8 @@ class ManagerTimeSheetPageView(View):
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
-        response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
+        response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id__email', flat=True).distinct()
+        # response['employees'] = Task.objects.filter(project_id=project_id).values_list('employee_id', flat=True).distinct()
         return render(request,'timesheet/managertimesheet.html', response )
              
 #this a timesheet view for payment by client on aproved timesheets
@@ -415,7 +441,7 @@ class ClientPaymentPageView(View):
          # TimeSheet.objects.all().update(payment=0)
          t = TimeSheet.objects.filter(employee_id=employee_id)
          for t in t :
-            print t.status , t.reject_comment,t.month,t.year,t.day,project_id
+            print t.status , t.reject_comment,t.month,t.year,t.day,t.approvaldate
          return redirect(reverse('clienttimesheet' ,kwargs ={'employeeid': employee_id, 'project_id' : project_id, 'client_id' : client_id ,'month' : month, 'year': year}))
 
     

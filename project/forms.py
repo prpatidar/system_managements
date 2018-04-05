@@ -44,3 +44,14 @@ class UpdateProjectForm(ModelForm):
             'payment_type': forms.Select(attrs={'class':'form-control','placeholder': 'Payment Type'}),
             
             }
+
+class UpdateTaskForm(ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ['estimatetime', 'startdate', 'enddate']
+        widgets = {
+            'estimatetime': forms.TextInput(attrs={'placeholder': 'Estimate Time'}),
+            'startdate': forms.TextInput(attrs={'class':'datepicker','placeholder': 'Start Date'}),
+            'enddate': forms.TextInput(attrs={'class':'datepicker','placeholder': 'End Date'}),
+            }

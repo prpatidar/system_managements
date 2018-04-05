@@ -16,7 +16,7 @@ from users.models import User
 from users.forms import EmployeeForm
 from timesheet.models import TimeSheet
 from timesheet.forms import TimeSheetForm
-from project.forms import ProjectForm ,TaskForm ,UpdateProjectForm
+from project.forms import ProjectForm, TaskForm, UpdateProjectForm, UpdateTaskForm 
 
 #Task list view for employees
 class EmployeeTaskPageView(View):
@@ -125,6 +125,7 @@ class UpdateTaskPageView(View):
     def get(self, request, task_id):
         response = {'task_id':task_id}
         data = Task.objects.get(id=task_id)
+        response['form'] = UpdateTaskForm(instance=data)
         response['data']= data
         return render(request,'project/updatetask.html' , response)
 
@@ -132,11 +133,14 @@ class UpdateTaskPageView(View):
         task=Task.objects.get(id=task_id)
         task.status=request.POST.get('status')
         estimatetime =request.POST.get('estimatetime')
+        startdate = request.POST.get('startdate')
+        enddate = request.POST.get('enddate')
         if estimatetime:
             task.estimatetime = estimatetime
-        spendtime = request.POST.get('spendtime')
-        if spendtime:
-            task.spendtime = spendtime
+        if startdate :
+            task.startdate = startdate
+        if enddate :
+            task.enddate = enddate
         task.save()
         return render(request,'project/updatetask.html')
 
@@ -156,28 +160,6 @@ class ProjectFormPageView(View):
             project.hourlyrate = hourlyrate
         project.save()
         return redirect(reverse('clientprojects'))
-
-
-#view to update the task starting and end dates
-class UpdateDatePageView(View):
-
-    def get(self, request, task_id):
-        response = {'task_id':task_id}
-        data = Task.objects.get(id=task_id)
-        response['data']= data
-        data.save()
-        return render(request, 'project/updatedate.html' , response)
-
-    def post(self, request, task_id):
-        task=Task.objects.get(id=task_id)
-        startdate = request.POST.get('startdate')
-        enddate = request.POST.get('enddate')
-        if startdate :
-            task.startdate = startdate
-        if enddate :
-            task.enddate = enddate
-        task.save()
-        return render(request,'project/updatedate.html')
 
 
 # task view for manager

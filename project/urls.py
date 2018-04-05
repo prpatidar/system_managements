@@ -7,7 +7,6 @@ from project import views
 urlpatterns = [  
 
     url(r'^updatetask/(?P<task_id>\d+)/$', views.UpdateTaskPageView.as_view(), name='updatetask'),
-    url(r'^updatedate/(?P<task_id>\d+)/$', views.UpdateDatePageView.as_view(), name='updatedate'),
     url(r'^updateproject/(?P<project_id>\d+)/(?P<manager_id>\d+)/$', views.UpdateProjectPageView.as_view(), name='updateproject'),
     url(r'^employeetask/(?P<project_id>\d+)/(?P<employee_id>\d+)/$', views.EmployeeTaskPageView.as_view(), name='employeetask'),
     url(r'^clientprojects/(?P<client_id>\d+)/$', views.ClientProjectPageView.as_view(), name='clientprojects'),

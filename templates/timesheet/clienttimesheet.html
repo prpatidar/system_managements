@@ -1,13 +1,16 @@
 {% include 'base.html' %}
 {% block content %}
 <center>
-
-<h1> <b><span class="label label-primary">Time Sheet for Employee ID {{employeeid}}</span></b> </h1>
-
+<table>
+  <th>
+<h1><b> <span class="button" >Time Sheet for EmployeeID </span> </b></h1>
+ </th>
+ <th>
 <form action="{% url 'clienttimesheet' employeeid=employeeid project_id=project.id client_id=client_id month=month year=year %}" method="get">
  <table>
   <th>
   <select  name="employee_id" class="form-control" id="employee_id"> 
+        <option value="1">Select ID</option>
       {% for employee in employees %}
             <option value="{{employee}}">{{employee}}</option>
       {% endfor %}
@@ -18,7 +21,9 @@
   </th>         
 </table>
 </form>
-<br>
+</th>
+</table>
+
 <table  width="20%">
   <tr>
     <th> 
@@ -67,20 +72,20 @@
                    {% else %}
                      
                      <script type="text/javascript">
-                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       $(".td{{i}}").attr("bgcolor","#FFE857"); 
                        console.log("grreen")
                      </script>
                    {% endif %}
 
                    {% if project.payment_type == "Daliy" and timesheet.payment == 0 %}
-                    <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=1 %}" >Pay </a> 
+                    <a class="buttontimesheet button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=1 %}" >Pay </a> 
                   {% elif project.payment_type == "Daliy" %}
                   <b> Paid $ {{timesheet.payment}} </b>
                     {% endif %}
 
                     {% if project.payment_type == "Weekly" and timesheet.payment == 0 %}
                        {% if i == 7 or i == 14  or i == 21 or i == 28 %}
-                      <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
+                      <a class="buttontimesheet button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
                        {% endif %}
                     {% elif project.payment_type == "Weekly" %}
                       <b> Paid $ {{timesheet.payment}} </b>
@@ -88,7 +93,7 @@
                   
                      {% if project.payment_type == "Monthly" and timesheet.payment == 0 %}
                        {% if i == 1 %}
-                      <a class="button button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
+                      <a class="buttontimesheet button2" href="{% url 'clientpayment' employee_id=employeeid project_id=project.id client_id=client_id day=i month=month year=year period=2 %}" >Pay </a> 
                        {% endif %}
                     {% elif project.payment_type == "Monthly" %}
                       <b> Paid $ {{timesheet.payment}} </b>

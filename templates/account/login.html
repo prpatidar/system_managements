@@ -8,7 +8,7 @@
 {% block content %}
 
 <form class="form-signin" method="POST" action="{% url 'account_login' %}">
-  <center><h1><b>{% trans "Login" %}</b> </h1> </center>
+  <center><h1><b>{% trans "Login" %} </h1> </center>
   {% csrf_token %}
    <font color="red" >{{ form.non_field_errors }} </font>
   {{ form.login }}
@@ -19,6 +19,6 @@
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <button class="button-login" type="submit">{% trans "Login" %} &raquo;</button>
-  <a  href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  <a  href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></b>
 </form>
 {% endblock %}

@@ -14,22 +14,28 @@
    
 });
 </script>
-<h1> <b><span class="label label-primary">Time Sheet for Employee ID {{employeeid}} </span></b></h1>
-
+<table>
+  <th>
+<h1><b> <span class="button" >Time Sheet for EmployeeID </span> </b></h1>
+ </th>
+ <th>
 <form action="{% url 'managertimesheet' employeeid=1 project_id=project.id manager_id=manager_id month=month year=year %}" method="get">
 <table>
   <th>
 <select class="form-control" name="employee_id" id="employee_id"> 
+             <option value="1">Select ID</option>
       {% for employee in employees %}
             <option value="{{employee}}">{{employee}}</option>
       {% endfor %}
           </select>
   </th>
   <th>
- <button class="btn btn-primary btn-md" type="submit"> Change </button>    
+ <button class="button" type="submit"> Change </button>    
  </th>     
 </table>
-</form></span>
+</form>
+</th>
+</table>
 <table  width="20%">
   <tr>
     <th> 
@@ -86,26 +92,26 @@
                    {% else %}
                      <b> Paid $ {{timesheet.payment}} </b>
                      <script type="text/javascript">
-                       $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
+                       $(".td{{i}}").attr("bgcolor","#FFE857"); 
                        console.log("grreen")
                      </script>
                    {% endif %}
                    <br>
                     {% if project.payment_type == "Daliy" and timesheet.status == "submit" %}
-                    <a class="button button2" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
-                    <button data-id="{{i}}" data-id1="1" id="popupbutton" data-toggle="modal" data-target="#myModal" class="button button2">Reject</button><br>
+                    <a class="buttonaprove  " href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=1 %}" >Aprove </a> 
+                    <button data-id="{{i}}" data-id1="1" id="popupbutton" data-toggle="modal" data-target="#myModal" class="buttonreject ">Reject</button><br>
                     {% endif %}
 
                     {% if project.payment_type == "Weekly" and timesheet.status == "submit"  %}
                        {% if i == 7 or i == 14  or i == 21 or i == 28 %}
-                      <a class="button" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=2 %}" >Aprove </a> 
-                      <button data-id="{{i}}" data-id1="2" class="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
+                      <a class="buttonaprove " href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=2 %}" >Aprove </a> 
+                      <button class="buttonreject " data-id="{{i}}" data-id1="2" id="popupbutton" data-toggle="modal" data-target="#myModal" >Reject</button><br>
                       {% endif %}
                    {% endif %}
 
                    {% if project.payment_type == "Monthly" and i == 1 and timesheet.status == "submit"   %}
-                    <a class="button button2" href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=3 %}" >Aprove </a> 
-                    <button data-id="{{i}}" data-id1="3" id="popupbutton" data-toggle="modal" data-target="#myModal" class="button button2">Reject</button><br>
+                    <a class="buttonaprove " href="{% url 'timesheetmanageraction' employee_id=employeeid project_id=project.id manager_id=manager_id day=i month=month year=year period=3 %}" >Aprove </a> 
+                    <button  data-id="{{i}}" data-id1="3" id="popupbutton" data-toggle="modal" data-target="#myModal" class="buttonreject ">Reject</button><br>
                    {% endif %} 
 
                   {% endif %}

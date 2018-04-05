@@ -31,6 +31,8 @@
             <td>
                 {% if task.status == 'Pending' %}<span class="label label-warning">{{task.status}}</span>
                 {% endif  %}
+                {% if task.status == 'In Progress' %}<span class="label label-primary">{{task.status}}</span>
+                {% endif  %}
                 {% if task.status == 'Started' %}<span class="label label-info">{{task.status}}</span>
                 {% endif %}
                 {% if task.status == 'Completed' %}<span class="label label-success">{{task.status}}</span>

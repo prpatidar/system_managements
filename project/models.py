@@ -35,4 +35,4 @@ class Task(models.Model):
     employee = models.ForeignKey(User, blank=True)
     status = models.CharField(max_length=30, default="Pending")
     estimatetime =models.CharField(max_length=10, null=True, blank=True)
-    spendtime = models.CharField(max_length=10, null=True, blank=True)
+    
