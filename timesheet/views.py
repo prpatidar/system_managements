@@ -83,8 +83,33 @@ class TimeSheetPageView(View):
         response['currentyear'] = date.year
         response['currentmonth'] = date.month
         response['monthname'] = calendar.month_name[month]
+        # tasks=Task.objects.filter(employee_id=employee_id, project_id=project_id)
+        # tasklist=[]
+        # for task in tasks :
+        #     if task.enddate :
+        #         if task.startdate <= date and task.enddate >= date :
+        #             tasklist.append(task.title)
+        #     elif task.startdate :
+        #         if task.startdate <= date :
+        #             tasklist.append(task.title)
+        # response['tasklist'] = tasklist
+        return render(request,'timesheet/timesheet.html', response )
+             
+#this a timesheet filling view for the employees
+class TimeSheetFormPageView(View):
+
+    def get(self, request, employee_id, project_id, day, month, year):
+        response = {'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year, 'day':day }
+        print project_id,day
+        print "hii"
+        try :
+            data=TimeSheet.objects.get(month=month, day=day, employee_id=employee_id, project_id=project_id, year=year)
+            response['data']= data
+        except ObjectDoesNotExist :
+            data = None
         tasks=Task.objects.filter(employee_id=employee_id, project_id=project_id)
         tasklist=[]
+        date = datetime.datetime.now().date()
         for task in tasks :
             if task.enddate :
                 if task.startdate <= date and task.enddate >= date :
@@ -93,14 +118,13 @@ class TimeSheetPageView(View):
                 if task.startdate <= date :
                     tasklist.append(task.title)
         response['tasklist'] = tasklist
-        return render(request,'timesheet/timesheet.html', response )
-             
-#this a timesheet filling view for the employees
-class TimeSheetFormPageView(View):
+        return render(request,'timesheet/filltimesheet.html' , response)
+
     
     def post(self, request, employee_id, project_id, day, month, year):
-        day=request.POST.get('day')
         print "hloo"+day
+        print project_id,day
+        print "hii"
         c=calendar.TextCalendar(calendar.MONDAY)
         date=datetime.datetime.now()
         try :
@@ -125,7 +149,7 @@ class TimeSheetFormPageView(View):
             f.taskname =request.POST.get('taskname')
             f.save()
 
-        return redirect(reverse('timesheet' ,kwargs ={'employee_id': employee_id, 'project_id' : project_id, 'month' : month, 'year': year}))
+        return render(request,'timesheet/filltimesheet.html')
 
 #this view is for employee action on their timesheet
 class TimeSheetActionPageView(View):

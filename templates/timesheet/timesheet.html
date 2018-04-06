@@ -1,10 +1,10 @@
 {% include 'base.html' %}
-<script type="text/javascript">
+<!-- <script type="text/javascript">
  $(document).on("click", ".popupbutton", function () {
      var myBookId = $(this).data('id');
       $("#day").val( myBookId );
 });
-</script>
+</script> -->
 {% block content %}
 <center>
 <h1> <b><span class="label label-primary">Time Sheet</span> </b>  </h1>
@@ -30,6 +30,7 @@
 <th width="13%"><center> MONDAY</th><th width="13%"><center>TUESDAY</th><th width="13%"><center>WEDNESDAY</th><th width="13%"><center>THURSDAY</th> <th width="13%"><center>FRIDAY</th> <th width="13%"><center>SATURDAY</th> <th width="13%"><center>SUNDAY</th>
 </center>
 </tr>
+
 {% for i in  days %}
     {% if forloop.counter == 0 or forloop.counter == 8 %}
      <tr >
@@ -42,7 +43,7 @@
 
                  {% if startmonth == endmonth %}
                   {% if i >= startday and i <= endday %}
-                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal"><b>{{i}}</b></button><br>
+                  <button type="button" url="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}" class="popupbutton" ><b>{{i}}</b></button><br>
                   {% else %}
                   <b> {{i}} </b>
                   {% endif %}
@@ -50,11 +51,11 @@
 
                  {% elif startmonth < endmonth %}
                   {% if month == startmonth and i >= startday %}
-                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal"><b>{{i}}</b></button><br>
+                  <button type="button" url="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}" class="popupbutton" ><b>{{i}}</b></button><br>
                   {% elif month == endmonth and i <= endday  %}
-                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal"><b>{{i}}</b></button><br>
+                  <button type="button" url="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}" class="popupbutton" ><b>{{i}}</b></button><br>
                   {% elif  month > startmonth and month < endmonth %}
-                  <button type="button" data-id="{{i}}" class="popupbutton" data-toggle="modal" data-target="#myModal"><b>{{i}}</b></button><br>
+                  <button type="button" url="{% url 'timesheetform' employee_id=employee_id project_id=project.id day=i month=month year=year %}" class="popupbutton" ><b>{{i}}</b></button><br>
                   {% else %}
                   <b> {{i}} </b>
                   {% endif %}
@@ -217,38 +218,31 @@
 
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-body">
-         
-<center>
-
-{% if tasklist%}
-<form class="form-signin" action="{% url 'timesheetform' employee_id=employee_id project_id=project.id day='26' month=month year=year %}" method="post">
-<h1> <b> Fill Working Hours </b></h1>
-{% csrf_token %}
-<b>
-<select class="form-control" name="taskname" placeholder="Select Task" required="">
-
-  {% for task in tasklist %}
-   <option>{{task}}</option>
-  {% endfor %}
-</select>
-
-<input type ="text" name="spendtime"  placeholder="Spend Time " required=""/>
-<input type="hidden" name="day" id="day" /> 
-<br>
-<button class="button" type="submit" >Update </button>
-<button type="button" class="button" data-dismiss="modal">Close</button>
-</b>
-{% else %}
-<form class="form-signin" >
-<h1><b> No any task to Fill Timesheet </b></h1>
-<button type="button" class="button" data-dismiss="modal">Close</button>
-
-</form>
-{% endif %}
-
-</form>
-</center>
+        <div class="modal-body" id="modalbody">
+ 
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+       
+
+   $('.popupbutton').on('click', function(event){
+      event.preventDefault();
+      $.ajax({
+        method: "GET",
+        url: $(this).attr("url"),
+        data: {},
+        dataType: 'html',
+        success: function (data) {
+                console.log("hii")
+                $("#modalbody").html(data); 
+                $('#myModal').modal('show');
+              }
+        });
+      });
+
+   
+});
+</script>

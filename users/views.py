@@ -30,9 +30,12 @@ class IndexPageView(View):
   
 
 # this class is used to render on home page for all users
-@login_required
 def HomePageView(request) :
     response = {}
+    if request.user:
+        pass
+    else:    
+        return render(request,'index1.html', response)
     return render(request,'users/home.html', response )
 
 

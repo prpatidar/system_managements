@@ -1,0 +1,55 @@
+{% if tasklist%}
+<form class="form-signin" id="form-signin" form-url="{% url 'timesheetform' employee_id=employee_id project_id=project_id day=day month=month year=year %}" method="post">
+<h1> <b> Fill Working Hours </b></h1>
+{{day}}
+{% csrf_token %}
+<b>
+<select class="form-control" name="taskname" placeholder="Select Task" required="">
+  {% if data.taskname %}
+   <option>{{data.taskname}}</option>
+  {% endif %}
+  {% for task in tasklist %}
+   <option>{{task}}</option>
+  {% endfor %}
+</select>
+
+<input type ="text" name="spendtime"  placeholder="Spend Time " value="{{data.spendtime}}" required=""/>
+<br>
+<button class="button" id="submit-button" type="submit" >Update </button>
+<button type="button" class="button" data-dismiss="modal">Close</button>
+</b>
+</form>
+{% else %}
+<form class="form-signin">
+    <h1><b> Submited Successfully </b></h1>
+</form>
+
+<script type="text/javascript">
+    setTimeout(function(){
+            location.reload(); //wait for 5 location.reload();//then reload the page.(3)
+        }, 1500)   
+</script>
+{% endif %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    
+    var form = $('#form-signin');
+    
+    $('#submit-button').on('click', function(event){
+        event.preventDefault();
+        $.ajax({
+            method: "POST",
+            url: form.attr("form-url"),
+            data: form.serialize(),
+            dataType: 'html',
+            
+            success: function (data) {
+                console.log(data)
+                $("#modalbody").html(data); 
+                $('#myModal').modal('show');
+            }
+        });
+    });
+});
+</script>
