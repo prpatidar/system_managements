@@ -1,0 +1,27 @@
+{% include "base.html" %}
+{% load static %}
+{% load staticfiles %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" type="text/css" media="screen" />
+
+    <ul class="rooms">
+        {% for room in rooms %}
+        <center>
+        <h3>
+            <li class="room-link button" data-room-id="{{ room.id }}">{{ room.id }}{{ room }}</li>
+        </h3>
+        </center> 
+        {% empty %}
+            <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a>?</p>
+        {% endfor %}
+    </ul>
+
+    <div id="chats">
+
+    </div>
+{% endblock %}
+{% block extra_body %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

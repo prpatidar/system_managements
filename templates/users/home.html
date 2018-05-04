@@ -1,5 +1,6 @@
 {% include 'base.html' %}
 {% load static %}
+{% if user.email %}
 {% block content %}
 <br><br><br>
 <!-- <center>
@@ -44,3 +45,4 @@
 
 </body>
 {% endblock %}
+{% endif %}

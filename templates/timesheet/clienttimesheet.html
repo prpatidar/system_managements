@@ -1,4 +1,5 @@
 {% include 'base.html' %}
+{% if user.email %}
 {% block content %}
 <center>
 <table>
@@ -114,4 +115,4 @@
 </center>
 
 {% endblock %}
-
+{% endif %}

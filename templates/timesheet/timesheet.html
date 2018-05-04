@@ -5,6 +5,7 @@
       $("#day").val( myBookId );
 });
 </script> -->
+{% if user.email %}
 {% block content %}
 <center>
 <h1> <b><span class="label label-primary">Time Sheet</span> </b>  </h1>
@@ -144,7 +145,6 @@
                     -->
                     {% if timesheet.payment == 0 %}
                     {% if timesheet.status == "aprove" %}
-                     <b> Payment Pending</b>
                      <script type="text/javascript">
                        $(".td{{i}}").attr("bgcolor","#C2F26E"); 
                        console.log("grreen")
@@ -158,7 +158,6 @@
                      </script>
                     {% endif %}
                    {% else %}
-                     <b> Paid $ {{timesheet.payment}} </b>
                      <script type="text/javascript">
                        $(".td{{i}}").attr("bgcolor","#8AE6D1"); 
                        console.log("grreen")
@@ -211,11 +210,8 @@
 </center>
 
 
-
-
-
 {% endblock %}
-
+{% endif %}
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-body" id="modalbody">

@@ -9,7 +9,6 @@ from rest_framework import generics
 
 from users.views import IndexPageView
 
-
 urlpatterns = [
 	url(r'^api/user/', include('users.api.urls')),
 	url(r'^api/user/', include('project.api.urls')),
@@ -24,6 +23,7 @@ urlpatterns = [
     url(r'^creditcard/', include('creditcard.urls')),
     url(r'^$', IndexPageView.as_view() , name='index'),
     url(r'^login/$', auth_views.login, name='login'),
-    url(r'^oauth/', include('social_django.urls', namespace='social')), 
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+    
 ]
 # urlpatterns = format_suffix_patterns(urlpatterns , allowed=['json', 'html'])

@@ -1,4 +1,5 @@
 import os
+from django.conf import settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -83,10 +84,15 @@ AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.google.GoogleOpenId',
     # 'social_core.backends.google.GoogleOAuth2',
 
-    'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
     # 'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    # 'users.admin.LoginAsUserBackend',
 )
+
+# HIJACK_BUTTON_TEMPLATE = getattr(settings, 'HIJACK_BUTTON_TEMPLATE', 'hijack_admin/admin_button.html')
+
+# HIJACK_REGISTER_ADMIN = getattr(settings, 'HIJACK_REGISTER_ADMIN', True)
 
 WSGI_APPLICATION = 'system_managements.wsgi.application'
 

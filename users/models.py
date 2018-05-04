@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
 
 # this is django's user model which is overrided to store more fileds for users
 class User(AbstractBaseUser, PermissionsMixin):
-    username =models.CharField(('username'),max_length=30)
+    username =models.CharField(('username'),max_length=30,blank=True)
     password = models.CharField(max_length=100, blank=True)
     email = models.EmailField( ('email'), unique=True)
     first_name = models.CharField(('first_name'), max_length=30, blank=True)
