@@ -22,6 +22,6 @@ social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 stripe==1.79.0
 urllib3==1.22
-wheel==0.30.0
+wheel==0.38.1
 django-hijack>=2.1.5
 django-compat>=1.0.13
